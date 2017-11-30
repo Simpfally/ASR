@@ -1,0 +1,15 @@
+Nouvel ISA : http://perso.citi-lab.fr/fdedinec/enseignement/2017/ASR1/isa2017v2.pdf
+
+Rendu 2 : http://perso.citi-lab.fr/fdedinec/enseignement/2017/ASR1/DM.pdf
+
+- Implémenter toute les instructions
+- Implémenter les labels et saut sur label (opti ou pas)
+- clear_screen (r0)
+- plot (r1, r2) en r0
+- fill
+- draw
+- putchar
+
+Afficher une droite, un rectangle et nos initials.
+
+fin rendu 2.
