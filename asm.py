@@ -40,8 +40,8 @@ def asm_reg(s):
 def asm_addr_signed(s):
     "converts the string s into its encoding"
     # Is it a label or a constant? 
-    if (s[0]>='0' and s[0]<='9') or s[0]=='-' or s[0]=='+': # TODO what it takes to catch hexa here
-        val=int(s) # TODO  catch exception here
+    if (s[0]>='0' and s[0]<='9') or s[0]=='-' or s[0]=='+' or s[0:2]=='0x': # TODO what it takes to catch hexa here
+        val=int(s,0) # TODO  catch exception here
         # The following is not very elegant but easy to trust
         if val>=-128 and val<= 127:
             return '0 ' + binary_repr(val, 8)
@@ -78,14 +78,44 @@ def asm_const_unsigned(s):
         
 def asm_const_signed(s):
     "converts the string s into its encoding"
-    # begin sabote
-    # end sabote
+    if s[0]=='+' or s[0]=='-' or (s[0]>='0' and s[0]<='9') or s[0:2]=="0x":
+        val=int(s,0)
+        if val > 0:
+            if val==0 or val==1:
+                return '0 ' + str(val)
+            elif val< 128:
+                return '10 0' + binary_repr(val, 7)
+            elif  val< (1<<31):
+                return '110 0' + binary_repr(val, 31)
+            elif val< (1<<63):
+                return '111 0' +  binary_repr(val, 63)
+            else:
+                error("Expecting an integer between -2^63 and 2^63, got " + s)
+        else:
+            if val > -128:
+                return '10 1' + binary_repr(val, 7)
+            elif val > (-1<<31):
+                return '110 1' + binary_repr(val, 31)
+            elif val > (-1<<63):
+                return '111 1' + binary_repr(val, 63)
+            else:
+            error("Expecting an integer between -2^63 and 2^63, got " + s)
+    else:
+        error("Expecting a constant, got " + s)
+        
     
 def asm_shiftval(s):
     "converts the string s into its encoding"
-    # begin sabote
-    # end sabote
-           
+    if (s[0]>='0' and s[0]<='9') or s[0:2]=="0x":
+        val=int(s,0)
+        if val==1:
+            return '1 '
+        elif val < 64:
+            return '0 ' + binary_repr(val,6)
+        else:
+            error("Expecting an integer lower than 64, got " + s)
+    else:
+        error("Expecting a constant, got " + s)           
 
 def asm_condition(cond):
     """converts the string cond into its encoding in the condition code. """
