@@ -34,6 +34,7 @@ def asm_reg(s):
         error("invalid register: " + s)
     else:
         return binary_repr(val,3) + ' '  # thanks stack overflow. The 3 is the number of bits
+    # test
 
 
 
