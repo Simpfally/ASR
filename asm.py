@@ -178,7 +178,7 @@ def asm_pass(iteration, s_file):
             if instruction_encoding=="":
                 error("don't know what to do with: " + source_line)
             else:
-                # get rid of spaces. Thanks Stack Overflow
+                # get rid of spaces. Thanks Stack Overflow 
                 compact_encoding = ''.join(instruction_encoding.split()) 
                 instr_size = len(compact_encoding)
                 # Debug output
