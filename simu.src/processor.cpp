@@ -15,6 +15,16 @@ Processor::Processor(Memory* m): m(m) {
 Processor::~Processor()
 {}
 
+int vflag_add(uword a, uword b) {
+	sword x = (sword) a;
+	sword y = (sword) b;
+	return ((x^y) >= 0) && ((x ^ (x +y)) < 0);
+}
+int vflag_sub(uword a, uword b) {
+	sword x = (sword) a;
+	sword y = (sword) b;
+	return ((x^y) >= 0) && ((x ^ (x -y)) < 0);
+}
 
 void Processor::von_Neuman_step(bool debug) {
     // numbers read from the binary code
@@ -55,6 +65,7 @@ void Processor::von_Neuman_step(bool debug) {
         fullr = ((doubleword) uop1) + ((doubleword) uop2); // for flags
         ur = uop1 + uop2;
         r[regnum1] = ur;
+	vflag = vflag_add(uop1, uop2);
         manage_flags=true;
         break;
 
@@ -67,6 +78,7 @@ void Processor::von_Neuman_step(bool debug) {
         ur = uop1 + uop2;
         r[regnum1] = ur;
         manage_flags=true;
+	vflag = vflag_add(uop1, uop2);
         break;
     
     case 0x2: // sub2
@@ -78,6 +90,7 @@ void Processor::von_Neuman_step(bool debug) {
         ur = uop1 - uop2;
         r[regnum1] = ur;
         manage_flags=true;
+	vflag = vflag_sub(uop1, uop2);
         break;
         
     case 0x3: // sub2i
@@ -89,6 +102,7 @@ void Processor::von_Neuman_step(bool debug) {
         ur = uop1 - uop2;
         r[regnum1] = ur;
         manage_flags=true;
+	vflag = vflag_sub(uop1, uop2);
         break;
         
             
@@ -100,6 +114,7 @@ void Processor::von_Neuman_step(bool debug) {
         fullr = ((doubleword) uop1) - ((doubleword) uop2); // for flags
         ur = uop1 - uop2;
         manage_flags=true;                
+	vflag = vflag_sub(uop1, uop2);
         break;
         
     case 0x5: //cmpi 
@@ -110,6 +125,7 @@ void Processor::von_Neuman_step(bool debug) {
         fullr = ((doubleword) uop1) - ((doubleword) uop2); //for flags
         ur = uop1 - uop2;
         manage_flags=true;
+	vflag = vflag_sub(uop1, uop2);
         break;
         
     case 0x6: //let// to test
@@ -246,6 +262,7 @@ void Processor::von_Neuman_step(bool debug) {
             ur = uop2 + uop3;
             r[regnum1] = ur;
             manage_flags  = true;
+	    vflag = vflag_add(uop2, uop3);
             break;
         case 0b1110011: // add3i
             read_reg_from_pc(regnum1);
@@ -257,6 +274,7 @@ void Processor::von_Neuman_step(bool debug) {
             ur = uop2 + uop3;
             r[regnum1] = ur;
             manage_flags  = true;
+	    vflag = vflag_add(uop2, uop3);
             break;
         case 0b1110100: // sub3
             read_reg_from_pc(regnum1);
@@ -268,6 +286,7 @@ void Processor::von_Neuman_step(bool debug) {
             ur = uop2 - uop3;
             r[regnum1] = ur;
             manage_flags  = true;
+	    vflag = vflag_sub(uop2, uop3);
             break;
         case 0b1110101: // sub3i
             read_reg_from_pc(regnum1);
@@ -279,6 +298,7 @@ void Processor::von_Neuman_step(bool debug) {
             ur = uop2 - uop3;
             r[regnum1] = ur;
             manage_flags  = true;
+	    vflag = vflag_sub(uop2, uop3);
             break;
         case 0b1110110: // and3
             read_reg_from_pc(regnum1);
@@ -357,6 +377,7 @@ void Processor::von_Neuman_step(bool debug) {
         zflag = (ur==0);
         cflag = (fullr > ((doubleword) 1)<<WORDSIZE);
         nflag = (0 > (sword) ur);
+
     }
 
     if (debug) {
@@ -480,10 +501,10 @@ bool Processor::cond_true(int cond) { // Fonctionne ok
         break;
         // begin sabote
     case 2 : // signed greater than >
-        return (!zflag && !nflag);
+        return !zflag && ((nflag && vflag) || (!nflag && !vflag));
         break;
     case 3 : // signed smaller than <
-        return (nflag && !zflag);
+        return (nflag && !vflag) || (!nflag && vflag);
         break;
     case 4 : // unsigned GT >
         return (!cflag && !zflag);
@@ -494,11 +515,10 @@ bool Processor::cond_true(int cond) { // Fonctionne ok
     case 6 : // unsigned LT <
         return (cflag);
         break;
-    case 7 : // unsigned LE <=
-        return (cflag || zflag);
+    case 7 : // two's complement overflow
+        return vflag;
         break;
         
-        // end sabote
     }
     throw "Unexpected condition code";
 }
