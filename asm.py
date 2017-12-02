@@ -185,33 +185,34 @@ def asm_pass(iteration, s_file):
             opcode = tokens[0]
             token_count = len(tokens)
             if opcode == "add2" and token_count==3:
-                    instruction_encoding = "0000 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
+                instruction_encoding = "0000 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "add2i" and token_count==3:
-                    instruction_encoding = "0001 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
-            if opcode == "jump" and token_count==2:
-                    instruction_encoding = "1010 " + asm_addr_signed(tokens[1])
+                instruction_encoding = "0001 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
             if opcode == "sub2" and token_count==3:
-                    instruction_encoding = "0010 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
+                instruction_encoding = "0010 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "sub2i" and token_count==3:
-                    instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
-                    
+                instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
+
+            if opcode == "jump" and token_count==2:
+                #if tokens[1] in labels
+                instruction_encoding = "1010 " + asm_addr_signed(tokens[1])
             if opcode == "jumpif" and token_count==3:
-                    instruction_encoding = "1011 " + asm_condition(tokens[1]) +asm_addr_signed(tokens[2])
+                instruction_encoding = "1011 " + asm_condition(tokens[1]) +asm_addr_signed(tokens[2])
+
             if opcode == "cmp" and token_count==3:
-                    instruction_encoding = "0100 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
+                instruction_encoding = "0100 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "cmpi" and token_count==3:
-                    instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
+                instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
             
             if opcode == "add3" and token_count==4:
-                    instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+                instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
             if opcode == "add3i" and token_count==4:
-                    instruction_encoding = "1110011 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
+                instruction_encoding = "1110011 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
             if opcode == "sub3" and token_count==4:
-                    instruction_encoding = "1110100 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+                instruction_encoding = "1110100 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
             if opcode == "sub3i" and token_count==4:
-                    instruction_encoding = "1110101 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + sm_const_unsigned(tokens[3])
+                instruction_encoding = "1110101 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + sm_const_unsigned(tokens[3])
 			
-            #end sabote
                     
             # If the line wasn't assembled:
             if instruction_encoding=="":
