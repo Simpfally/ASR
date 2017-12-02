@@ -179,6 +179,15 @@ void Processor::von_Neuman_step(bool debug) {
 		// no change to nflag
 		manage_flags=false;		
 		break;
+	case 0x9:
+		read_bit_from_pc(opcode);
+		switch(opcode) {
+				case 0b10010: // readze TODO
+						break;
+				case 0b10011: // readse TODO
+						break;
+		}
+		break;
 
 	case 0xc: // Instructions à 6 bits 1100*
 		// Fallthrough
@@ -227,7 +236,14 @@ void Processor::von_Neuman_step(bool debug) {
 			manage_flags = true;
 			break;
 			
-		case 0b110100: // write
+		case 0b110100: // write lower size bits of reg to mem
+			read_counter_from_pc(counter);
+			read_size_from_pc(size);
+			read_reg_from_pc(regnum1);
+			for (int ii = 1; ii <= size; ii++) {
+					m->write_bit(counter, r[regnum1] & ((1 << ii) - 1));
+			}
+
 			break;
 		case 0b110101: //call
 				read_addr_from_pc(offset);
@@ -238,8 +254,14 @@ void Processor::von_Neuman_step(bool debug) {
 		
 			break;
 		case 0b110110: //setctr
+			read_counter_from_pc(counter);
+			read_reg_from_pc(regnum1);
+			m -> set_counter(counter, r[regnum1]);
 			break;
 		case 0b110111: //getctr
+			read_counter_from_pc(counter);
+			read_reg_from_pc(regnum1);
+			r[regnum1] = m->counter[counter];
 			break;
 		}
 		break;
@@ -253,6 +275,11 @@ void Processor::von_Neuman_step(bool debug) {
 		read_bit_from_pc(opcode);
 		switch(opcode) {
 		case 0b1110000: // push
+			read_size_from_pc(size);
+			read_reg_from_pc(regnum1);
+			m->set_counter(SP, m->counter[SP] - size);
+			//TODO write sp size reg
+			m->set_counter(SP, m->counter[SP] - size);
 			break;
 		case 0b1110001: // return
 				pc = r[7];
@@ -532,12 +559,28 @@ bool Processor::cond_true(int cond) { // Fonctionne ok
 
 
 void Processor::read_counter_from_pc(int& var) {
-	// begin sabote
-	// end sabote
+	read_bit_from_pc(var);
+	read_bit_from_pc(var);
 }
 
 
 void Processor::read_size_from_pc(int& size) {
-	// begin sabote
-	// end sabote
+	int header =0;
+	read_bit_from_pc(header);
+	read_bit_from_pc(header);
+	if (header == 0) {
+			size = 1;
+	} else if (header == 1) {
+			size = 4;
+	} else {
+			read_bit_from_pc(header);
+			if (header == 4)
+					size = 8;
+			if (header == 5)
+					size = 16;
+			if (header == 6)
+					size = 32;
+			if (header == 7)
+					size = 64;
+	}
 }
