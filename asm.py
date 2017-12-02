@@ -215,11 +215,9 @@ def asm_pass(iteration, s_file):
                         intr_size = 71
 
                     addy = labels[tokens[2]] - current_address
-                    print "putain", labels[tokens[2]], current_address
 
                     addy -= intr_size
                     addyb = asm_addr_signed(str(addy), size_asked)
-                    print "gonna jump", addy
                 else:
                     if iteration == 2:
                         error("label" + tokens[2] + "non enregistre")
@@ -227,7 +225,30 @@ def asm_pass(iteration, s_file):
                         addyb = asm_addr_signed(str(10), size_asked)
                 instruction_encoding = "1010 " + addyb
             if opcode == "jumpif" and token_count==3:
-                instruction_encoding = "1011 " + asm_condition(tokens[1]) +asm_addr_signed(tokens[2])
+                instruction_encoding = "1011 " + asm_condition(tokens[1]) + asm_addr_signed(tokens[2])
+            if opcode == "jumpif" and token_count==4:
+                size_asked = int(tokens[1])
+                if tokens[3] in labels:
+                    intr_size = 0
+                    if size_asked == 8:
+                        intr_size = 13
+                    elif size_asked == 16:
+                        intr_size = 22
+                    elif size_asked == 32:
+                        intr_size = 39
+                    else:
+                        intr_size = 71
+
+                    addy = labels[tokens[3]] - current_address
+
+                    addy -= intr_size + 3
+                    addyb = asm_addr_signed(str(addy), size_asked)
+                else:
+                    if iteration == 2:
+                        error("label" + tokens[3] + "non enregistre")
+                    else: 
+                        addyb = asm_addr_signed(str(10), size_asked)
+                instruction_encoding = "1011 " + asm_condition(tokens[2]) +addyb
 
             if opcode == "cmp" and token_count==3:
                 instruction_encoding = "0100 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
