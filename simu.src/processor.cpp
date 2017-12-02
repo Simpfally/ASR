@@ -122,7 +122,7 @@ void Processor::von_Neuman_step(bool debug) {
     case 0x7: //leti
         read_reg_from_pc(regnum1);
         read_const_from_pc(constop);
-        uop2 = constop; //Jsp si je peux direct faire r[regnum] = constop
+        uop2 = constop;
         r[regnum1] = uop2;
         manage_flags = false;
         break;
@@ -333,7 +333,7 @@ void Processor::von_Neuman_step(bool debug) {
             uop2 = r[regnum2];
             uop3 = r[regnum3];
             fullr = ((doubleword) uop2) ^ ((doubleword) uop3); // for flags
-            ur = uop2 ^ uop3; //Il me met le ^ en orange comme si c'était pas un opérateur donc je sais pas si il va y avoir un pb
+            ur = uop2 ^ uop3;
             r[regnum1] = ur;
             manage_flags  = true;
             break;
