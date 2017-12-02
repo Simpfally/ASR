@@ -38,22 +38,27 @@ def asm_reg(s):
 
 
 
-def asm_addr_signed(s):
+# Modified, if size = 8 16 32 or 64 it will force a size
+def asm_addr_signed(s, size=0):
+    size = int(size)
     "converts the string s into its encoding"
     # Is it a label or a constant? 
-    if (s[0]>='0' and s[0]<='9') or s[0]=='-' or s[0]=='+' or s[0:2]=='0x': # TODO what it takes to catch hexa here
+    if (s[0]>='0' and s[0]<='9') or s[0]=='-' or s[0]=='+' or s[0:2]=='0x': 
         val=int(s,0) # TODO  catch exception here
+
         # The following is not very elegant but easy to trust
-        if val>=-128 and val<= 127:
+        if val>=-128 and val<= 127 and (size == 0 or size == 8):
             return '0 ' + binary_repr(val, 8)
-        elif val>=-32768 and val<= 32767:
+        elif val>=-32768 and val<= 32767 and (size == 0 or size == 16):
             return '10 ' +  binary_repr(val, 16)
-        elif val>=-(1<<31) and val<= (1<<31)-1:
+        elif val>=-(1<<31) and val<= (1<<31)-1 and (size == 0 or size == 32):
             return '110 ' + binary_repr(val, 32)
+        elif size != 0 and size != 64:
+            error("either size is invalid or %s doesn't fit in %s bits" % (s, str(size)))
         else:
             return '111 ' +  binary_repr(val, 64)
     else:
-        error("Fixme! labels currently unsupported")
+        error(s + " is not an integer")
     
     
 
@@ -179,6 +184,7 @@ def asm_pass(iteration, s_file):
                 label = token[0: -1] # all the characters except last one
                 labels[label] = current_address
                 tokens = tokens[1:]
+                print "added", label
 
         # now all that remains should be an instruction... or nothing
         if tokens:
@@ -194,16 +200,36 @@ def asm_pass(iteration, s_file):
                 instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
 
             if opcode == "jump" and token_count==2:
-                if tokens[1] in labels:
-                    print(tokens[1], "is in labels at address", labels[tokens[1]])
+                instruction_encoding = "1010 " + asm_addr_signed(tokens[1])
+            if opcode == "jump" and token_count==3:
+                size_asked = tokens[1]
+                if tokens[2] in labels:
+                    print(tokens[2], "is in labels at address", labels[tokens[2]])
 
-                    addy = labels[tokens[1]] - current_address
-                    addyb = asm_addr_signed(str(addy))
-                    size = len(''.join(addyb.split())) + 4
-                    addy = current_address - labels[tokens[1]] - size
-                    addyb = asm_addr_signed(str(addy))
+                    intr_size = 0
+                    if size_asked == 8:
+                        intr_size = 13
+                    elif size_asked == 16:
+                        intr_size = 22
+                    elif size_asked == 32:
+                        intr_size = 39
+                    else:
+                        intr_size = 71
+
+                    addy = labels[tokens[2]] - current_address
+
+                    print "gonna jump", str(addy)
+                    if addy <= 0:
+                        print "subs", intr_size
+                        addy -= intr_size
+                    addyb = asm_addr_signed(str(addy), size_asked)
+                    print "gonna jump", str(addy)
                 else:
-                    addyb = asm_addr_signed(tokens[1])
+                    if iteration == 2:
+                        #error("label" + tokens[1] + "non enregistre")
+                        print("ok")
+                    else: 
+                        addyb = asm_addr_signed(str(10), size_asked)
                 instruction_encoding = "1010 " + addyb
             if opcode == "jumpif" and token_count==3:
                 instruction_encoding = "1011 " + asm_condition(tokens[1]) +asm_addr_signed(tokens[2])
@@ -221,8 +247,8 @@ def asm_pass(iteration, s_file):
                 instruction_encoding = "1110100 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
             if opcode == "sub3i" and token_count==4:
                 instruction_encoding = "1110101 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + sm_const_unsigned(tokens[3])
-			
-                    
+
+
             # If the line wasn't assembled:
             if instruction_encoding=="":
                 error("don't know what to do with: " + source_line)
@@ -256,7 +282,7 @@ if __name__ == '__main__':
     obj_file = basefilename+".obj"
     code = asm_pass(1, filename) # first pass essentially builds the labels
 
-     # code = asm_pass(2, filename) # second pass is for good, but is disabled now
+    code = asm_pass(2, filename) # second pass is for evil
 
     # statistics
     print "Average instruction size is " + str(1.0*current_address/len(code))
