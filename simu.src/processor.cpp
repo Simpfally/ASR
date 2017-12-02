@@ -101,7 +101,32 @@ void Processor::von_Neuman_step(bool debug) {
         manage_flags=true;                
         break;
         
-
+    case 0x5: //cmpi //nose
+        read_reg_from_pc(regnum1);
+        read_const_from_pc(constop);
+        uop1 = r[regnum1];
+        uop2 = constop;
+        fullr = ((doubleword) uop1) - ((doubleword) uop2); //for flags
+        ur = uop1 - uop2;
+        manage_flags=true;
+        break;
+        
+    case 0x6: //let
+        read_reg_from_pc(regnum1);
+        read_reg_from_pc(regnum2);
+        uop2 = r[regnum2];
+        r[regnum1] = uop2;
+        manage_flags = false;
+        break;
+        
+    case 0x7: //leti
+        read_reg_from_pc(regnum1);
+        read_const_from_pc(constop);
+        uop2 = constop; //Jsp si je peux direct faire r[regnum] = constop
+        r[regnum1] = uop2;
+        manage_flags = false;
+        break;
+        
     case 0xa: // jump
         read_addr_from_pc(offset);
         pc += offset;
@@ -141,9 +166,19 @@ void Processor::von_Neuman_step(bool debug) {
         // begin sabote
         //end sabote
 
-    case 0xc: // Instructions à 7 bits 1100*
+    case 0xc: // Instructions à 6 bits 1100*
+        // read two more bits
+        read_bit_from_pc(opcode);
+        read_bit_from_pc(opcode);
+        switch(opcode) {
+        case 0b110000: //or2
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            uop1 = r[regnum1]
+        }
+        break;
         // Fallthrough
-    case 0xd: // Instructions à 7 bits 1101*
+    case 0xd: // Instructions à 6 bits 1101*
         //read two more bits
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
@@ -156,8 +191,8 @@ void Processor::von_Neuman_step(bool debug) {
         }
         break; // Do not forget this break! 
         
-    case 0xe: // Instructions à 8bits
-    case 0xf: // Instructions à 8 bits
+    case 0xe: // Instructions à 7 bits
+    case 0xf: // Instructions à 7 bits
         //read 3 more bits
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
