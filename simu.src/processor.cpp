@@ -182,30 +182,31 @@ void Processor::von_Neuman_step(bool debug) {
 	case 0x9:
 		read_bit_from_pc(opcode);
 		switch(opcode) {
+			// Lecture des poits faible en premier
 				case 0b10010: // readze
 					read_counter_from_pc(counter);
 					read_size_from_pc(size);
 					read_reg_from_pc(regnum1);
-					ur = m->read_bit(counter);
-					for (int i = 2; i <= size; i++) {
-							ur = ur << 1;
-							ur += m->read_bit(counter);
+					ur = 0;
+					for (int i = 0; i < size; i++) {
+							ur = ur + (m->read_bit(counter) << i);
 					}
 					r[regnum1] = ur;
-
 					break;
-				case 0b10011: // readse
+				case 0b10011: // readse signed
 					read_counter_from_pc(counter);
 					read_size_from_pc(size);
 					read_reg_from_pc(regnum1);
-					ur = m->read_bit(counter);
-					for (int i = 2; i <= WORDSIZE; i++) {
-							ur = ur << 1;
-							if (i > size) {
-									ur += 1;
-							} else {
-									ur += m->read_bit(counter);
-							}
+					ur = 0;
+					fullr = 0; //last bit read
+					for (int i = 0; i < size; i++) {
+						fullr = m->read_bit(counter);
+						ur = ur + (fullr << i);
+					}
+					if (fullr) { //last bit was 1 : the number was negative
+						for (int i = size; i < WORDSIZE; i++) {
+							ur = ur + (1<<i);
+						}
 					}
 					r[regnum1] = ur;
 
@@ -260,7 +261,7 @@ void Processor::von_Neuman_step(bool debug) {
 			manage_flags = true;
 			break;
 			
-		case 0b110100: // write lower size bits of reg to mem
+		case 0b110100: // write Low bit to high bits
 			read_counter_from_pc(counter);
 			read_size_from_pc(size);
 			read_reg_from_pc(regnum1);
@@ -424,6 +425,7 @@ void Processor::von_Neuman_step(bool debug) {
 			manage_flags  = true;
 			break;
 		case 0b1111100: // asr3
+			//TODO
 			break;
 		}
 		break;
