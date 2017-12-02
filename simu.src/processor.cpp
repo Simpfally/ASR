@@ -21,6 +21,7 @@ void Processor::von_Neuman_step(bool debug) {
     int opcode=0;
     int regnum1=0;
     int regnum2=0;
+    int regnum3=0;
     int shiftval=0;
     int condcode=0;
     int counter=0;
@@ -32,6 +33,7 @@ void Processor::von_Neuman_step(bool debug) {
     // all unsigned, to be cast to signed when required.
     uword uop1;
     uword uop2;
+    uword uop3;
     uword ur=0;
     doubleword fullr;
     bool manage_flags=false; // used to factor out the flag management code
@@ -88,9 +90,7 @@ void Processor::von_Neuman_step(bool debug) {
         r[regnum1] = ur;
         manage_flags=true;
         break;
-        
-      
-    
+            
     case 0x4: // cmp // TO TEST
         read_reg_from_pc(regnum1);
         read_reg_from_pc(regnum2);
@@ -101,7 +101,7 @@ void Processor::von_Neuman_step(bool debug) {
         manage_flags=true;                
         break;
         
-    case 0x5: //cmpi //nose
+    case 0x5: //cmpi 
         read_reg_from_pc(regnum1);
         read_const_from_pc(constop);
         uop1 = r[regnum1];
@@ -122,7 +122,7 @@ void Processor::von_Neuman_step(bool debug) {
     case 0x7: //leti
         read_reg_from_pc(regnum1);
         read_const_from_pc(constop);
-        uop2 = constop; //Jsp si je peux direct faire r[regnum] = constop
+        uop2 = constop;
         r[regnum1] = uop2;
         manage_flags = false;
         break;
@@ -172,15 +172,59 @@ void Processor::von_Neuman_step(bool debug) {
         //read two more bits
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
-        switch(opcode) {            
-        case 0b110100: // write
+        switch(opcode) {
+        case 0b110000: // or2
             read_reg_from_pc(regnum1);
             read_reg_from_pc(regnum2);
-            uop1 = r[regnum1]
-           
+            uop1 = r[regnum1];
+            uop2 = r[regnum2];
+            fullr = ((doubleword) uop1) | ((doubleword) uop2); // for flags
+            ur = uop1 | uop2;
+            manage_flags=true;
+            break;
+            
+        case 0b110001: // or2i
+            read_reg_from_pc(regnum1);
+            read_const_from_pc(constop);
+            uop1 = r[regnum1];
+            uop2 =constop;
+            fullr = ((doubleword) uop1) | ((doubleword) uop2); // for flags
+            ur = uop1 | uop2;
+            manage_flags = true;
+            break;
+            
+        case 0b110010: // and2
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            uop1 = r[regnum1];
+            uop2 = r[regnum2];
+            fullr = ((doubleword) uop1) & ((doubleword) uop2); // for flags
+            ur = uop1 & uop2;
+            manage_flags=true;
+            break;
+            
+        case 0b110011: // and2i 
+            read_reg_from_pc(regnum1);
+            read_const_from_pc(constop);
+            uop1 = r[regnum1];
+            uop2 =constop;
+            fullr = ((doubleword) uop1) & ((doubleword) uop2); // for flags
+            ur = uop1 & uop2;
+            manage_flags = true;
+            break;
+            
+        case 0b110100: // write
+            // begin sabote
+            //end sabote
+            break;
+        case 0b110101: //call
+            break;
+        case 0b110110: //setctr
+            break;
+        case 0b110111: //getctr
             break;
         }
-        break; // Do not forget this break! 
+        break;
         
     case 0xe: // Instructions à 7 bits
         //Fallthrough
@@ -189,9 +233,124 @@ void Processor::von_Neuman_step(bool debug) {
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
-        
-        // begin sabote
-        // end sabote
+        switch(opcode) {
+        case 0b1110000: // push
+            break;
+        case 0b1110001: // return
+            break;
+        case 0b1110010: // add3
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_reg_from_pc(regnum3);
+            uop2 = r[regnum2];
+            uop3 = r[regnum3];
+            fullr = ((doubleword) uop2) + ((doubleword) uop3); // for flags
+            ur = uop2 + uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1110011: // add3i
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_const_from_pc(constop);
+            uop2 = r[regnum2];
+            uop3 = constop;
+            fullr = ((doubleword) uop2) + ((doubleword) uop3); // for flags
+            ur = uop2 + uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1110100: // sub3
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_reg_from_pc(regnum3);
+            uop2 = r[regnum2];
+            uop3 = r[regnum3];
+            fullr = ((doubleword) uop2) - ((doubleword) uop3); // for flags
+            ur = uop2 - uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1110101: // sub3i
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_const_from_pc(constop);
+            uop2 = r[regnum2];
+            uop3 = constop;
+            fullr = ((doubleword) uop2) - ((doubleword) uop3); // for flags
+            ur = uop2 - uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1110110: // and3
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_reg_from_pc(regnum3);
+            uop2 = r[regnum2];
+            uop3 = r[regnum3];
+            fullr = ((doubleword) uop2) & ((doubleword) uop3); // for flags
+            ur = uop2 & uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1110111: // and3i
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_const_from_pc(constop);
+            uop2 = r[regnum2];
+            uop3 = constop;
+            fullr = ((doubleword) uop2) & ((doubleword) uop3); // for flags
+            ur = uop2 & uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1111000: // or3
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_reg_from_pc(regnum3);
+            uop2 = r[regnum2];
+            uop3 = r[regnum3];
+            fullr = ((doubleword) uop2) | ((doubleword) uop3); // for flags
+            ur = uop2 | uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1111001: // or3i
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_const_from_pc(constop);
+            uop2 = r[regnum2];
+            uop3 = constop;
+            fullr = ((doubleword) uop2) | ((doubleword) uop3); // for flags
+            ur = uop2 | uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1111010: // xor3
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_reg_from_pc(regnum3);
+            uop2 = r[regnum2];
+            uop3 = r[regnum3];
+            fullr = ((doubleword) uop2) ^ ((doubleword) uop3); // for flags
+            ur = uop2 ^ uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1111011: // xor3i
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            read_const_from_pc(constop);
+            uop2 = r[regnum2];
+            uop3 = constop;
+            fullr = ((doubleword) uop2) ^ ((doubleword) uop3); // for flags
+            ur = uop2 ^ uop3;
+            r[regnum1] = ur;
+            manage_flags  = true;
+            break;
+        case 0b1111100: // asr3
+            break;
+        }
         break;
     }
     
