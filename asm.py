@@ -279,9 +279,9 @@ def asm_pass(iteration, s_file):
             if opcode == "getctr" and token_count==3: 
                 instruction_encoding = "110111 " + asm_counter(tokens[1]) + asm_reg(tokens[3])
             if opcode == "push" and token_count==2: 
-                instruction_encoding = "1110000" + asm_reg(tokens[3])
+                instruction_encoding = "1110000 " + asm_reg(tokens[3])
             if opcode == "return" and token_count==1: 
-                instruction_encoding = "1110001" 
+                instruction_encoding = "1110001 " 
             if opcode == "pop" and token_count==3: # zero extended
                 instruction_encoding = "10010 " + asm_counter("sp" ) + asm_size(tokens[2]) + asm_reg(tokens[3])
             
