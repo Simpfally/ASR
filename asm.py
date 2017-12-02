@@ -266,7 +266,14 @@ def asm_pass(iteration, s_file):
             if opcode == "write" and token_count==4: 
                 instruction_encoding = "110100 " + asm_counter(tokens[1]) + asm_size(tokens[2]) + asm_reg(tokens[3])
             if opcode == "call" and token_count==2:
-                instruction_encoding = "110101 " + asm_addr_signed(tokens[1])
+                lbl = tokens[1]
+                if lbl in labels:
+                    instruction_encoding = "110101 " + asm_addr_signed(labels[lbl], 32)
+                elif iteration == 1:
+                    instruction_encoding = "110101 " + asm_addr_signed(0, 32)
+                else:
+                    error("label" + lbl + "non enregistré (call)")
+
             if opcode == "setctr" and token_count==3: 
                 instruction_encoding = "110110 " + asm_counter(tokens[1]) + asm_reg(tokens[3])
             if opcode == "getctr" and token_count==3: 
@@ -275,6 +282,8 @@ def asm_pass(iteration, s_file):
                 instruction_encoding = "1110000" + asm_reg(tokens[3])
             if opcode == "return" and token_count==1: 
                 instruction_encoding = "1110001" 
+            if opcode == "pop" and token_count==3: # zero extended
+                instruction_encoding = "10010 " + asm_counter("sp" ) + asm_size(tokens[2]) + asm_reg(tokens[3])
             
             if opcode == "add3" and token_count==4:
                 instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
