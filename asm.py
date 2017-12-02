@@ -78,7 +78,7 @@ def asm_const_unsigned(s):
             return '110 ' + binary_repr(val, 32)
         else:
             return '111 ' +  binary_repr(val, 64)
-    else:
+        else:
         error("Expecting a constant, got " + s)
 
         
@@ -86,26 +86,16 @@ def asm_const_signed(s):
     "converts the string s into its encoding"
     if s[0]=='+' or s[0]=='-' or (s[0]>='0' and s[0]<='9') or s[0:2]=="0x":
         val=int(s,0)
-        if val > 0:
-            if val==0 or val==1:
-                return '0 ' + str(val)
-            elif val< 128:
-                return '10 0' + binary_repr(val, 7)
-            elif  val< (1<<31):
-                return '110 0' + binary_repr(val, 31)
-            elif val< (1<<63):
-                return '111 0' +  binary_repr(val, 63)
-            else:
-                error("Expecting an integer between -2^63 and 2^63, got " + s)
+        if val==0 or val==1:
+            return '0 ' + str(val)
+        elif -128 < val < 128:
+            return '10 ' + binary_repr(val, 8)
+        elif  (-1<<31) < val < (1<<31):
+            return '110 ' + binary_repr(val, 32)
+        elif (-1<<63) < val < (1<<63):
+            return '111 ' +  binary_repr(val, 64)
         else:
-            if val > -128:
-                return '10 1' + binary_repr(val, 7)
-            elif val > (-1<<31):
-                return '110 1' + binary_repr(val, 31)
-            elif val > (-1<<63):
-                return '111 1' + binary_repr(val, 63)
-            else:
-                error("Expecting an integer between -2^63 and 2^63, got " + s)
+            error("Expecting an integer between -2^63 and 2^63, got " + s)
     else:
         error("Expecting a constant, got " + s)
         
