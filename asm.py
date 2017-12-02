@@ -208,7 +208,6 @@ def asm_pass(iteration, s_file):
                     instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
             if opcode == "add3i" and token_count==4:
                     instruction_encoding = "1110011 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
-	    
             if opcode == "sub3" and token_count==4:
                     instruction_encoding = "1110100 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
             if opcode == "sub3i" and token_count==4:
