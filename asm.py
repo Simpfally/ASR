@@ -1,6 +1,3 @@
-#Putain ca marche sa mère
-#test git
-#test 2
 #!/usr/bin/env python
 
 ### src_etudiants/asm.py
