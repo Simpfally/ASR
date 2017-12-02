@@ -199,6 +199,19 @@ def asm_pass(iteration, s_file):
             if opcode == "sub2i" and token_count==3:
                 instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
 
+            if opcode == "cmp" and token_count==3:
+                instruction_encoding = "0100 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
+            if opcode == "cmpi" and token_count==3:
+                instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
+            if opcode == "let" and token_count==3:
+                instruction_encoding = "0110 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
+            if opcode == "leti" and token_count==3:
+                instruction_encoding = "0111 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
+            if opcode == "readze" and token_count==4: # zero extended
+                instruction_encoding = "10010 " + asm_counter(tokens[1]) + asm_size(tokens[2]) + asm_reg(tokens[3])
+            if opcode == "readse" and token_count==4: # sign extended
+                instruction_encoding = "10011 " + asm_counter(tokens[1]) + asm_size(tokens[2]) + asm_reg(tokens[3])
+
             if opcode == "jump" and token_count==2:
                 instruction_encoding = "1010 " + asm_addr_signed(tokens[1])
             if opcode == "jump" and token_count==3:
@@ -250,10 +263,18 @@ def asm_pass(iteration, s_file):
                         addyb = asm_addr_signed(str(10), size_asked)
                 instruction_encoding = "1011 " + asm_condition(tokens[2]) +addyb
 
-            if opcode == "cmp" and token_count==3:
-                instruction_encoding = "0100 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
-            if opcode == "cmpi" and token_count==3:
-                instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
+            if opcode == "write" and token_count==4: 
+                instruction_encoding = "110100 " + asm_counter(tokens[1]) + asm_size(tokens[2]) + asm_reg(tokens[3])
+            if opcode == "call" and token_count==2:
+                instruction_encoding = "110101 " + asm_addr_signed(tokens[1])
+            if opcode == "setctr" and token_count==3: 
+                instruction_encoding = "110110 " + asm_counter(tokens[1]) + asm_reg(tokens[3])
+            if opcode == "getctr" and token_count==3: 
+                instruction_encoding = "110111 " + asm_counter(tokens[1]) + asm_reg(tokens[3])
+            if opcode == "push" and token_count==2: 
+                instruction_encoding = "1110000" + asm_reg(tokens[3])
+            if opcode == "return" and token_count==1: 
+                instruction_encoding = "1110001" 
             
             if opcode == "add3" and token_count==4:
                 instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
