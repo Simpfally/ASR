@@ -292,8 +292,21 @@ def asm_pass(iteration, s_file):
             if opcode == "sub3" and token_count==4:
                 instruction_encoding = "1110100 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
             if opcode == "sub3i" and token_count==4:
-                instruction_encoding = "1110101 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + sm_const_unsigned(tokens[3])
-
+                instruction_encoding = "1110101 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
+            if opcode == "and3" and token_count==4:
+                instruction_encoding = "1110110 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+            if opcode == "and3i" and token_count==4:
+                instruction_encoding = "1110111 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
+            if opcode == "or3" and token_count==4:
+                instruction_encoding = "1111000 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+            if opcode == "or3i" and token_count==4:
+                instruction_encoding = "1111001 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
+            if opcode == "xor3" and token_count==4:
+                instruction_encoding = "1111010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+            if opcode == "xor3i" and token_count==4:
+                instruction_encoding = "1111011 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
+            if opcode == "asr3" and token_count==4:
+                instruction_encoding = "1110110 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_shiftval(tokens[3])
 
             # If the line wasn't assembled:
             if instruction_encoding=="":
