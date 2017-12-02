@@ -274,7 +274,7 @@ void Processor::von_Neuman_step(bool debug) {
         case 0b1110101: // sub3i
             read_reg_from_pc(regnum1);
             read_reg_from_pc(regnum2);
-            read_reg_from_pc(constop);
+            read_const_from_pc(constop);
             uop2 = r[regnum2];
             uop3 = constop;
             fullr = ((doubleword) uop2) - ((doubleword) uop3); // for flags
@@ -318,7 +318,7 @@ void Processor::von_Neuman_step(bool debug) {
         case 0b1111001: // or3i
             read_reg_from_pc(regnum1);
             read_reg_from_pc(regnum2);
-            read_cont_from_pc(constop);
+            read_const_from_pc(constop);
             uop2 = r[regnum2];
             uop3 = constop;
             fullr = ((doubleword) uop2) | ((doubleword) uop3); // for flags
@@ -340,7 +340,7 @@ void Processor::von_Neuman_step(bool debug) {
         case 0b1111011: // xor3i
             read_reg_from_pc(regnum1);
             read_reg_from_pc(regnum2);
-            read_reg_from_pc(constop);
+            read_const_from_pc(constop);
             uop2 = r[regnum2];
             uop3 = constop;
             fullr = ((doubleword) uop2) ^ ((doubleword) uop3); // for flags
