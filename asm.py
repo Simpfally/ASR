@@ -204,10 +204,15 @@ def asm_pass(iteration, s_file):
             if opcode == "cmpi" and token_count==3:
                     instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
             
-            if opcode == "add3i" and token_count==4:
-                    instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
             if opcode == "add3" and token_count==4:
-                    instruction_encoding = "1110011 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+                    instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+            if opcode == "add3i" and token_count==4:
+                    instruction_encoding = "1110011 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
+	    
+            if opcode == "sub3" and token_count==4:
+                    instruction_encoding = "1110100 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+            if opcode == "sub3i" and token_count==4:
+                    instruction_encoding = "1110101 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + sm_const_unsigned(tokens[3])
 			
             #end sabote
                     
