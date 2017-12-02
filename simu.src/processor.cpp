@@ -87,9 +87,7 @@ void Processor::von_Neuman_step(bool debug) {
         ur = uop1 - uop2;
         r[regnum1] = ur;
         manage_flags=true;
-        break;
-        
-      
+        break;      
     
     case 0x4: // cmp // TO TEST
         read_reg_from_pc(regnum1);
@@ -167,23 +165,72 @@ void Processor::von_Neuman_step(bool debug) {
         //end sabote
 
     case 0xc: // Instructions à 6 bits 1100*
+        // read two more bits
+        read_bit_from_pc(opcode);
+        read_bit_from_pc(opcode);
+        switch(opcode) {
+        case 0b110000: //or2
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            uop1 = r[regnum1];
+            uop2 = r[regnum2];
+            fullr = ((doubleword) uop1) | ((doubleword) uop2); // for flags
+            ur = uop1 | uop2;
+            manage_flags=true;
+            break;
+            
+        case 0b110001: //or2i
+            read_reg_from_pc(regnum1);
+            read_const_from_pc(constop);
+            uop1 = r[regnum1];
+            uop2 =constop;
+            fullr = ((doubleword) uop1) | ((doubleword) uop2); // for flags
+            ur = uop1 | uop2;
+            manage_flags = true;
+            break;
+            
+        case 0b110010: // and2
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            uop1 = r[regnum1];
+            uop2 = r[regnum2];
+            fullr = ((doubleword) uop1) & ((doubleword) uop2); // for flags
+            ur = uop1 & uop2;
+            manage_flags=true;
+            break;
+            
+        case 0b110011: // and2i 
+            read_reg_from_pc(regnum1);
+            read_const_from_pc(constop);
+            uop1 = r[regnum1];
+            uop2 =constop;
+            fullr = ((doubleword) uop1) & ((doubleword) uop2); // for flags
+            ur = uop1 & uop2;
+            manage_flags = true;
+            break;
+        }
+        break;
         // Fallthrough
     case 0xd: // Instructions à 6 bits 1101*
         //read two more bits
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
-        switch(opcode) {            
+        switch(opcode) {
+            
         case 0b110100: // write
-            read_reg_from_pc(regnum1);
-            read_reg_from_pc(regnum2);
-            uop1 = r[regnum1]
-           
+            // begin sabote
+            //end sabote
+            break;
+        case 0b110101: //call
+            break;
+        case 0b110110: //setctr
+            break;
+        case 0b110111: //getctr
             break;
         }
         break; // Do not forget this break! 
         
     case 0xe: // Instructions à 7 bits
-        //Fallthrough
     case 0xf: // Instructions à 7 bits
         //read 3 more bits
         read_bit_from_pc(opcode);
