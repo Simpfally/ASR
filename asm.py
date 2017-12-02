@@ -202,10 +202,8 @@ def asm_pass(iteration, s_file):
             if opcode == "jump" and token_count==2:
                 instruction_encoding = "1010 " + asm_addr_signed(tokens[1])
             if opcode == "jump" and token_count==3:
-                size_asked = tokens[1]
+                size_asked = int(tokens[1])
                 if tokens[2] in labels:
-                    print(tokens[2], "is in labels at address", labels[tokens[2]])
-
                     intr_size = 0
                     if size_asked == 8:
                         intr_size = 13
@@ -217,17 +215,14 @@ def asm_pass(iteration, s_file):
                         intr_size = 71
 
                     addy = labels[tokens[2]] - current_address
+                    print "putain", labels[tokens[2]], current_address
 
-                    print "gonna jump", str(addy)
-                    if addy <= 0:
-                        print "subs", intr_size
-                        addy -= intr_size
+                    addy -= intr_size
                     addyb = asm_addr_signed(str(addy), size_asked)
-                    print "gonna jump", str(addy)
+                    print "gonna jump", addy
                 else:
                     if iteration == 2:
-                        #error("label" + tokens[1] + "non enregistre")
-                        print("ok")
+                        error("label" + tokens[2] + "non enregistre")
                     else: 
                         addyb = asm_addr_signed(str(10), size_asked)
                 instruction_encoding = "1010 " + addyb
