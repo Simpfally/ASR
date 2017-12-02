@@ -387,7 +387,7 @@ void Processor::von_Neuman_step(bool debug) {
 	}
 
 	if (debug) {
-		cout << "pc=" << dec << instr_pc << endl;
+		cout << "pc=" << dec << instr_pc << "r0=" << r[0] <<"r1=" << r[1] << endl;
 		cout << "after instr: " << opcode 
 				 << " at pc=" << hex << setw(8) << setfill('0') << instr_pc
 				 << " (newpc=" << hex << setw(8) << setfill('0') << pc
