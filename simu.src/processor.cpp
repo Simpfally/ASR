@@ -182,10 +182,34 @@ void Processor::von_Neuman_step(bool debug) {
 	case 0x9:
 		read_bit_from_pc(opcode);
 		switch(opcode) {
-				case 0b10010: // readze TODO
-						break;
-				case 0b10011: // readse TODO
-						break;
+				case 0b10010: // readze
+					read_counter_from_pc(counter);
+					read_size_from_pc(size);
+					read_reg_from_pc(regnum1);
+					ur = m->read_bit(counter);
+					for (int i = 2; i <= size; i++) {
+							ur = ur << 1;
+							ur += m->read_bit(counter);
+					}
+					r[regnum1] = ur;
+
+					break;
+				case 0b10011: // readse
+					read_counter_from_pc(counter);
+					read_size_from_pc(size);
+					read_reg_from_pc(regnum1);
+					ur = m->read_bit(counter);
+					for (int i = 2; i <= WORDSIZE; i++) {
+							ur = ur << 1;
+							if (i > size) {
+									ur += 1;
+							} else {
+									ur += m->read_bit(counter);
+							}
+					}
+					r[regnum1] = ur;
+
+				    break;
 		}
 		break;
 
