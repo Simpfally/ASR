@@ -91,7 +91,7 @@ void Processor::von_Neuman_step(bool debug) {
         
       
     
-    case 0x4: // cmp // TO TEST
+    case 0x4: // cmp Ok
         read_reg_from_pc(regnum1);
         read_reg_from_pc(regnum2);
         uop1 = r[regnum1];
@@ -101,7 +101,7 @@ void Processor::von_Neuman_step(bool debug) {
         manage_flags=true;                
         break;
         
-    case 0x5: //cmpi //nose
+    case 0x5: //cmpi 
         read_reg_from_pc(regnum1);
         read_const_from_pc(constop);
         uop1 = r[regnum1];
@@ -111,7 +111,7 @@ void Processor::von_Neuman_step(bool debug) {
         manage_flags=true;
         break;
         
-    case 0x6: //let
+    case 0x6: //let// to test
         read_reg_from_pc(regnum1);
         read_reg_from_pc(regnum2);
         uop2 = r[regnum2];
@@ -119,7 +119,7 @@ void Processor::von_Neuman_step(bool debug) {
         manage_flags = false;
         break;
         
-    case 0x7: //leti
+    case 0x7: //leti// to test
         read_reg_from_pc(regnum1);
         read_const_from_pc(constop);
         uop2 = constop; //Jsp si je peux direct faire r[regnum] = constop
@@ -134,7 +134,7 @@ void Processor::von_Neuman_step(bool debug) {
         manage_flags=false;     
         break;
 
-    case 0xb: // jumpif //TO TEST
+    case 0xb: // jumpif // ok
         read_cond_from_pc(condcode);
         read_addr_from_pc(offset);
         if (cond_true(condcode)) {
@@ -144,7 +144,7 @@ void Processor::von_Neuman_step(bool debug) {
         manage_flags=false;
         break;
         
-    case 0x8: // shift
+    case 0x8: // shift// to test
         read_bit_from_pc(dir);
         read_reg_from_pc(regnum1);
         read_shiftval_from_pc(shiftval);
@@ -163,9 +163,6 @@ void Processor::von_Neuman_step(bool debug) {
         manage_flags=false;     
         break;
 
-        // begin sabote
-        //end sabote
-
     case 0xc: // Instructions à 6 bits 1100*
         // Fallthrough
     case 0xd: // Instructions à 6 bits 1101*
@@ -173,10 +170,10 @@ void Processor::von_Neuman_step(bool debug) {
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
         switch(opcode) {            
-        case 0b110100: // write
+        case 0b110100: // write( ctr size reg)
             read_reg_from_pc(regnum1);
             read_reg_from_pc(regnum2);
-            uop1 = r[regnum1]
+            uop1 = r[regnum1];
            
             break;
         }
@@ -203,6 +200,7 @@ void Processor::von_Neuman_step(bool debug) {
     }
 
     if (debug) {
+	    cout << "pc =" << dec <<instr_pc<< endl;
         cout << "after instr: " << opcode 
                  << " at pc=" << hex << setw(8) << setfill('0') << instr_pc
                  << " (newpc=" << hex << setw(8) << setfill('0') << pc
