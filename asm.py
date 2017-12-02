@@ -202,7 +202,11 @@ def asm_pass(iteration, s_file):
             if opcode == "cmp" and token_count==3:
                     instruction_encoding = "0100 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "cmpi" and token_count==3:
-                    instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
+                    instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
+            
+            if opcode == "add3" and token_count==4:
+                    instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])
+			
             #end sabote
                     
             # If the line wasn't assembled:
@@ -229,7 +233,7 @@ def asm_pass(iteration, s_file):
 #/* main */
 if __name__ == '__main__':
 
-    argparser = argparse.ArgumentParser(description='This is the assembler for the ASR2017 processor @ ENS-Lyon')
+	argparser = argparse.ArgumentParser(description='This is the assembler for the ASR2017 processor @ ENS-Lyon')
     argparser.add_argument('filename', help='name of the source file.  "python asm.py toto.s" assembles toto.s into toto.obj')
 
     options=argparser.parse_args()
