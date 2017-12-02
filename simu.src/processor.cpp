@@ -539,8 +539,14 @@ void Processor::read_addr_from_pc(uword& var) {
 
 
 void Processor::read_shiftval_from_pc(int& var) {
-	// begin sabote
-	//end sabote
+	var = 0;
+	read_bit_from_pc(var);
+	if (var == 0) {
+		for (int i=0; i<6; i++) {
+			var = (var<<1) + m->read_bit(PC)
+			pc++;
+		}
+	}
 }
 
 void Processor::read_cond_from_pc(int& var) {
