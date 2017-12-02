@@ -100,7 +100,7 @@ def asm_const_signed(s):
             elif val > (-1<<63):
                 return '111 1' + binary_repr(val, 63)
             else:
-            error("Expecting an integer between -2^63 and 2^63, got " + s)
+                error("Expecting an integer between -2^63 and 2^63, got " + s)
     else:
         error("Expecting a constant, got " + s)
         
@@ -237,7 +237,7 @@ def asm_pass(iteration, s_file):
 #/* main */
 if __name__ == '__main__':
 
-	argparser = argparse.ArgumentParser(description='This is the assembler for the ASR2017 processor @ ENS-Lyon')
+    argparser = argparse.ArgumentParser(description='This is the assembler for the ASR2017 processor @ ENS-Lyon')
     argparser.add_argument('filename', help='name of the source file.  "python asm.py toto.s" assembles toto.s into toto.obj')
 
     options=argparser.parse_args()
