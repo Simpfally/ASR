@@ -268,11 +268,11 @@ def asm_pass(iteration, s_file):
             if opcode == "call" and token_count==2:
                 lbl = tokens[1]
                 if lbl in labels:
-                    instruction_encoding = "110101 " + asm_addr_signed(labels[lbl], 32)
+                    instruction_encoding = "110101 " + asm_addr_signed(str(labels[lbl]), 32)
                 elif iteration == 1:
                     instruction_encoding = "110101 " + asm_addr_signed(0, 32)
                 else:
-                    error("label" + lbl + "non enregistré (call)")
+                    error("label" + lbl + "non enregistre (call)")
 
             if opcode == "setctr" and token_count==3: 
                 instruction_encoding = "110110 " + asm_counter(tokens[1]) + asm_reg(tokens[3])

@@ -255,6 +255,8 @@ void Processor::von_Neuman_step(bool debug) {
 		case 0b1110000: // push
 			break;
 		case 0b1110001: // return
+				pc = r[7];
+				m -> set_counter(PC, (uword)pc);
 			break;
 		case 0b1110010: // add3
 			read_reg_from_pc(regnum1);
@@ -385,6 +387,7 @@ void Processor::von_Neuman_step(bool debug) {
 	}
 
 	if (debug) {
+		cout << "pc=" << dec << instr_pc << endl;
 		cout << "after instr: " << opcode 
 				 << " at pc=" << hex << setw(8) << setfill('0') << instr_pc
 				 << " (newpc=" << hex << setw(8) << setfill('0') << pc
