@@ -1,3 +1,4 @@
+#Putain ca marche sa mère
 #!/usr/bin/env python
 
 ### src_etudiants/asm.py
