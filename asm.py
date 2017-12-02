@@ -194,8 +194,17 @@ def asm_pass(iteration, s_file):
                 instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
 
             if opcode == "jump" and token_count==2:
-                #if tokens[1] in labels
-                instruction_encoding = "1010 " + asm_addr_signed(tokens[1])
+                if tokens[1] in labels:
+                    print(tokens[1], "is in labels at address", labels[tokens[1]])
+
+                    addy = labels[tokens[1]] - current_address
+                    addyb = asm_addr_signed(str(addy))
+                    size = len(''.join(addyb.split())) + 4
+                    addy = current_address - labels[tokens[1]] - size
+                    addyb = asm_addr_signed(str(addy))
+                else:
+                    addyb = asm_addr_signed(tokens[1])
+                instruction_encoding = "1010 " + addyb
             if opcode == "jumpif" and token_count==3:
                 instruction_encoding = "1011 " + asm_condition(tokens[1]) +asm_addr_signed(tokens[2])
 
