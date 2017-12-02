@@ -21,6 +21,7 @@ void Processor::von_Neuman_step(bool debug) {
     int opcode=0;
     int regnum1=0;
     int regnum2=0;
+    int regnum3=0;
     int shiftval=0;
     int condcode=0;
     int counter=0;
@@ -32,6 +33,7 @@ void Processor::von_Neuman_step(bool debug) {
     // all unsigned, to be cast to signed when required.
     uword uop1;
     uword uop2;
+    uword uop3;
     uword ur=0;
     doubleword fullr;
     bool manage_flags=false; // used to factor out the flag management code
