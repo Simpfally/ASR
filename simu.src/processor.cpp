@@ -167,31 +167,23 @@ void Processor::von_Neuman_step(bool debug) {
         //end sabote
 
     case 0xc: // Instructions à 6 bits 1100*
-        // read two more bits
-        read_bit_from_pc(opcode);
-        read_bit_from_pc(opcode);
-        switch(opcode) {
-        case 0b110000: //or2
-            read_reg_from_pc(regnum1);
-            read_reg_from_pc(regnum2);
-            uop1 = r[regnum1]
-        }
-        break;
         // Fallthrough
     case 0xd: // Instructions à 6 bits 1101*
         //read two more bits
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
-        switch(opcode) {
-            
+        switch(opcode) {            
         case 0b110100: // write
-            // begin sabote
-            //end sabote
+            read_reg_from_pc(regnum1);
+            read_reg_from_pc(regnum2);
+            uop1 = r[regnum1]
+           
             break;
         }
         break; // Do not forget this break! 
         
     case 0xe: // Instructions à 7 bits
+        //Fallthrough
     case 0xf: // Instructions à 7 bits
         //read 3 more bits
         read_bit_from_pc(opcode);
