@@ -542,10 +542,8 @@ void Processor::read_shiftval_from_pc(int& var) {
 	var = 0;
 	read_bit_from_pc(var);
 	if (var == 0) {
-		for (int i=0; i<6; i++) {
-			var = (var<<1) + m->read_bit(PC)
-			pc++;
-		}
+		for (int i=0; i<6; i++)
+			read_bit_from_pc(var);
 	}
 }
 
@@ -565,7 +563,6 @@ bool Processor::cond_true(int cond) { // Fonctionne ok
 	case 1 : // NOT EQ
 		return (!zflag);
 		break;
-		// begin sabote
 	case 2 : // signed greater than >
 		return !zflag && ((nflag && vflag) || (!nflag && !vflag));
 		break;
@@ -591,12 +588,14 @@ bool Processor::cond_true(int cond) { // Fonctionne ok
 
 
 void Processor::read_counter_from_pc(int& var) {
+	var =0;
 	read_bit_from_pc(var);
 	read_bit_from_pc(var);
 }
 
 
 void Processor::read_size_from_pc(int& size) {
+	size =0;
 	int header =0;
 	read_bit_from_pc(header);
 	read_bit_from_pc(header);
