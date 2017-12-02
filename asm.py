@@ -197,6 +197,8 @@ def asm_pass(iteration, s_file):
                 instruction_encoding = "0110 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "leti" and token_count==3:
                 instruction_encoding = "0111 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
+            if opcode == "shift" and token_count==4:
+                instruction_encoding = "1000 " +tokens[1]+ asm_reg(tokens[2]) + asm_shiftval(tokens[3]) 
             if opcode == "readze" and token_count==4: # zero extended
                 instruction_encoding = "10010 " + asm_counter(tokens[1]) + asm_size(tokens[2]) + asm_reg(tokens[3])
             if opcode == "readse" and token_count==4: # sign extended
