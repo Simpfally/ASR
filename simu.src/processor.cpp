@@ -231,7 +231,7 @@ void Processor::von_Neuman_step(bool debug) {
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
         read_bit_from_pc(opcode);
-        break;
+        switch(opcode) {
         case 0b1110000: // push
             break;
         case 0b1110001: // return
@@ -348,6 +348,8 @@ void Processor::von_Neuman_step(bool debug) {
             break;
         case 0b1111100: // asr3
             break;
+        }
+        break;
     }
     
     // flag management
