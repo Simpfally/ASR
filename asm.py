@@ -188,10 +188,8 @@ def asm_pass(iteration, s_file):
                     instruction_encoding = "0000 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "add2i" and token_count==3:
                     instruction_encoding = "0001 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
-            # Here, a lot of constructive copypaste, for instance
             if opcode == "jump" and token_count==2:
                     instruction_encoding = "1010 " + asm_addr_signed(tokens[1])
-         #begin sabote
             if opcode == "sub2" and token_count==3:
                     instruction_encoding = "0010 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "sub2i" and token_count==3:
