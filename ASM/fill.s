@@ -1,5 +1,5 @@
-;;fill
-;;remplit un rectangle (r1,r2),(r3,r4) de la couleur r0 avec la convention (r1>r3)&(r2>r4)
+;; fill
+;; remplit un rectangle (r1,r2),(r3,r4) de la couleur r0 avec la convention (r1>r3)&(r2>r4)
 
 jump 16 main
 
