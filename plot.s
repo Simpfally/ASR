@@ -4,7 +4,7 @@ jump 16 main
 
 plot:
 
-push 16 r3 ;;pour pas perdre notre registre quand on execute la fonction
+push 16 r3 ;;pour pas perdre notre registre quand on exécute la fonction
 
 let r3 r1
 shift 0 r2 5
