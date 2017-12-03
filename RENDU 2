@@ -6,15 +6,16 @@ Rendu 2 : http://perso.citi-lab.fr/fdedinec/enseignement/2017/ASR1/DM.pdf
 ->>>>done Implémenter les labels et saut sur label (opti ou pas)
 ->>>>done clear_screen (r0)
 - demander de l'aide pour l'histoire des constantes signés + vérifier que readse a un sens
-- plot (r1, r2) en r0
-- fill : rectangle en r0 de (r1,r2) à (r3, r4)
-- draw : ligne en r0 (r1,r2) à (r3, r4)
+- plot (r1, r2) en r0 #to test
+- fill : rectangle en r0 de (r1,r2) à (r3, r4) #to test
+- draw : ligne en r0 (r1,r2) à (r3, r4) #to complete
 - trouver caractères 8x8
 - les importers dans le processeur direct?
 - putchar : code ascii en r3, lettre 8x8 en (r1, r2)
 - Afficher une droite, un rectangle et nos initials.
 - peut-être refaire quelque truc pour pas utiliser counter[] si y a vraiment besoin
-- vérifier comment faire les couleurs usuelles rgb
+- vérifier comment faire les couleurs usuelles rgb: #Sur les 16 bits les 6 premiers pour le rouge, les 5 suivants pour le vert, les 5 autres pour le bleu
+#Tu me diras si tu comprends pareil
 
 
 fin rendu 2.
