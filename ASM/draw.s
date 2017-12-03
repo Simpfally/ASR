@@ -8,8 +8,6 @@ draw:
 ;; valeur de r7 au début du programme: à dépiler avant le return!
 push 16 r7
 
-;; r5 est l'erreur
-
 sub3 r6 r4 r2 ;;dy ← y2 - y1
 sub3 r5 r1 r3 ;;dx ← x2 - x1 et e ← -dx (valeur d’erreur initiale)
 ;; y ← y1: on utilisera directement r2 (rangée initiale)
