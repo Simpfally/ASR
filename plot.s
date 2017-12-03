@@ -2,19 +2,13 @@ jump 16 main
 
 plot:
 
-leti r3 0x10000
-
-;;décalage.... Je vois pas comment faire autrement..
-add2 r2 r2
-add2 r2 r2
-add2 r2 r2
-add2 r2 r2
-add2 r2 r2
+let r3 r1
+shift r2 5
 add2 r3 r2
-add2 r2 r2
-add2 r2 r2
+shift r2 2
 add2 r3 r2
-add2 r3 r1
+shift r3 4
+add2 r3 0x10000
 
 setsctr a0 r3
 write a0 16 r0
