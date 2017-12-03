@@ -303,7 +303,10 @@ void Processor::von_Neuman_step(bool debug) {
 			read_size_from_pc(size);
 			read_reg_from_pc(regnum1);
 			m->set_counter(SP, m->counter[SP] - size);
-			//TODO write sp size reg
+
+			for (int ii = 1; ii <= size; ii++) {
+					m->write_bit(SP, r[regnum1] & ((1 << ii) - 1));
+			}
 			m->set_counter(SP, m->counter[SP] - size);
 			break;
 		case 0b1110001: // return
