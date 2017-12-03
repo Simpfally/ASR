@@ -44,6 +44,7 @@ clean_screen:
 ;; plot
 ;; affiche un point de couleur r0 aux coordonnées (r1,r2)
 ;; modify r3 a0
+;; modifie un peu r2 : suppose qu'un shift <<2 ne le modifie pas
 
 ;; (0,0) -----> (159, 0)
 ;;   |
@@ -55,12 +56,13 @@ plot:
 ; à décider si on fait cet écart de performance ou non :
 ;push 32 r3 ;;pour pas perdre notre registre quand on exécute la fonction
 
-	let r3 r1
-	shift 0 r2 5 
-	add2 r3 r2 ; r3 <- r2 << 5
-	shift 0 r2 2
-	add2 r3 r2 ; r3 <- r3 + r2 << 2
-	shift 0 r3 4 ; r3 << 4
+	asr3 r3 r2 5 	; r3 <- r2 << 5
+	shift 0 r2 7
+	add2 r3 r2 	; r3 += r2 << 7
+	shift 1 r2 7
+
+	add2 r3 r1
+	shift 0 r3 4 	; r3 << 4
 	add2i r3 0x10000
 
 	setctr a0 r3
@@ -75,28 +77,8 @@ return
 ; 0x0F111 un rose qui va bien avec.. bref
 main:
 	leti r0 0xF000
-	leti r1 159
-	leti r2 127
-	call plot
-	leti r1 2
-	leti r2 2
-	call plot
-	leti r1 2
-	leti r2 2
-	call plot
-	leti r1 3
-	leti r2 3
-	call plot
-	leti r1 4
-	leti r2 4
-	call plot
-	leti r1 4
-	leti r2 4
-	call plot
-	call plot
 	leti r1 0
-	call plot
-	leti r1 4
+	leti r2 0
 	call plot
 	loop:
 		call plot

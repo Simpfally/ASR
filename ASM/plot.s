@@ -1,29 +1,31 @@
-;;plot
-;;affiche un point de couleur r0 aux coordonnées (r1,r2)
-;;utilise r3
+jump main
+;; plot
+;; affiche un point de couleur r0 aux coordonnées (r1,r2)
+;; modify r3 a0
+;; modifie un peu r2 : suppose qu'un shift <<2 ne le modifie pas
 
 ;; (0,0) -----> (159, 0)
 ;;   |
 ;;   V
-;; (0, 127)
-jump 16 main
+;; (0, 127)   * (
 
 plot:
 
-push 32 r3 ;;pour pas perdre notre registre quand on exécute la fonction
+; à décider si on fait cet écart de performance ou non :
+;push 32 r3 ;;pour pas perdre notre registre quand on exécute la fonction
 
-let r3 r1
-shift 0 r2 5
-add2 r3 r2
-shift 0 r2 2
-add2 r3 r2
-shift 0 r3 4
-add2i r3 0x10000
+	asr3 r3 r2 5 	; r3 <- r2 << 5
+	shift 0 r2 7
+	add2 r3 r2 	; r3 += r2 << 7
+	shift 1 r2 7
 
-setctr a0 r3
-write a0 16 r0
+	shift 0 r3 4 	; r3 << 4
+	add2i r3 0x10000
 
-pop 32 r3
+	setctr a0 r3
+	write a0 16 r0
+
+	;pop 32 r3
 
 return
 
