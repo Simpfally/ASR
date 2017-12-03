@@ -29,6 +29,7 @@ void simulate_screen(Memory* m,  bool* refresh) {
 		if (true) {
 			/* convert the colors */
 			// i is a counter of 16-bit words
+			// R6 G5 B5
 			for (unsigned int i=0; i < HEIGHT*WIDTH; i++) {
 				uint64_t mword = m->m[ (MEM_SCREEN_BEGIN >>6) + (i>>2)];
 				uint16_t pixel = (mword >> ((i&3)<<4)) & 0xffff;
