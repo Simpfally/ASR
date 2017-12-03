@@ -4,5 +4,17 @@
 jump 16 main
 
 draw:
+
+push 16 r7
+
 ;; r5 est l'erreur
 sub3 r5 r1 r3
+
+let r6 r1
+dy ← y2 - y1 ;
+dx ← x2 - x1 ;
+y ← y1 ;  // rangée initiale
+e ← -dx ;  // valeur d’erreur initiale
+e(1,0) ← dy × 2;
+e(0,1) ← -dx × 2;
+   
