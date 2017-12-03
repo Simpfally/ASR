@@ -187,7 +187,6 @@ void Processor::von_Neuman_step(bool debug) {
 					read_counter_from_pc(counter);
 					read_size_from_pc(size);
 					read_reg_from_pc(regnum1);
-					ur = 0;
 					for (int i = 0; i < size; i++) {
 							ur = ur + (m->read_bit(counter) << i);
 					}
@@ -265,10 +264,11 @@ void Processor::von_Neuman_step(bool debug) {
 			read_counter_from_pc(counter);
 			read_size_from_pc(size);
 			read_reg_from_pc(regnum1);
-			for (int ii = 1; ii <= size; ii++) {
-					m->write_bit(counter, r[regnum1] & ((1 << ii) - 1));
+			fullr = 1;
+			for (int ii = 0; ii < size; ii++) {
+				m->write_bit(counter, (r[regnum1] & fullr)>>ii);
+				fullr = fullr << 1;
 			}
-
 			break;
 		case 0b110101: //call
 				read_addr_from_pc(offset);
@@ -302,11 +302,16 @@ void Processor::von_Neuman_step(bool debug) {
 		case 0b1110000: // push
 			read_size_from_pc(size);
 			read_reg_from_pc(regnum1);
-			m->set_counter(SP, m->counter[SP] - size);
-
-			for (int ii = 1; ii <= size; ii++) {
-					m->write_bit(SP, r[regnum1] & ((1 << ii) - 1));
+			if (m->counter[SP] == 0) {
+				m->set_counter(SP, 0xFF << 6); // loin du screen, on est bien
 			}
+			m->set_counter(SP, m->counter[SP] - size);
+			fullr = 1;
+			for (int ii = 0; ii < size; ii++) {
+				m->write_bit(SP, (r[regnum1] & fullr)>>ii);
+				fullr = fullr << 1;
+			}
+
 			m->set_counter(SP, m->counter[SP] - size);
 			break;
 		case 0b1110001: // return

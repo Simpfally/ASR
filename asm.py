@@ -6,6 +6,7 @@
 # The bit string includes spaces and newlines for readability,
 # these should be ignored by the simulator when it reads the corresponding file.
 
+
 import os
 import sys
 import re
@@ -141,7 +142,7 @@ def asm_size(s):
         val = codelist[s]
         return val + " "
     else:
-        error("Invalid size: " + size)
+        error("Invalid size: " +s)
 
 
 def asm_pass(iteration, s_file):
@@ -185,20 +186,20 @@ def asm_pass(iteration, s_file):
             if opcode == "add2" and token_count==3:
                 instruction_encoding = "0000 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "add2i" and token_count==3:
-                instruction_encoding = "0001 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
+                instruction_encoding = "0001 " + asm_reg(tokens[1]) + asm_const_signed(tokens[2])
             if opcode == "sub2" and token_count==3:
                 instruction_encoding = "0010 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "sub2i" and token_count==3:
-                instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
+                instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_signed(tokens[2]) 
 
             if opcode == "cmp" and token_count==3:
                 instruction_encoding = "0100 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "cmpi" and token_count==3:
-                instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
+                instruction_encoding = "0101 " + asm_reg(tokens[1]) + asm_const_signed(tokens[2])
             if opcode == "let" and token_count==3:
                 instruction_encoding = "0110 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "leti" and token_count==3:
-                instruction_encoding = "0111 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
+                instruction_encoding = "0111 " + asm_reg(tokens[1]) + asm_const_signed(tokens[2]) 
             if opcode == "shift" and token_count==4:
                 instruction_encoding = "1000 " +tokens[1]+ asm_reg(tokens[2]) + asm_shiftval(tokens[3]) 
             if opcode == "readze" and token_count==4: # zero extended
@@ -269,15 +270,15 @@ def asm_pass(iteration, s_file):
                     error("label" + lbl + "non enregistre (call)")
 
             if opcode == "setctr" and token_count==3: 
-                instruction_encoding = "110110 " + asm_counter(tokens[1]) + asm_reg(tokens[3])
+                instruction_encoding = "110110 " + asm_counter(tokens[1]) + asm_reg(tokens[2])
             if opcode == "getctr" and token_count==3: 
-                instruction_encoding = "110111 " + asm_counter(tokens[1]) + asm_reg(tokens[3])
-            if opcode == "push" and token_count==2: 
-                instruction_encoding = "1110000 " + asm_reg(tokens[3])
+                instruction_encoding = "110111 " + asm_counter(tokens[1]) + asm_reg(tokens[2])
+            if opcode == "push" and token_count==3: 
+                instruction_encoding = "1110000 " + asm_size(tokens[1]) +  asm_reg(tokens[2])
             if opcode == "return" and token_count==1: 
                 instruction_encoding = "1110001 " 
             if opcode == "pop" and token_count==3: # zero extended
-                instruction_encoding = "10010 " + asm_counter("sp" ) + asm_size(tokens[2]) + asm_reg(tokens[3])
+                instruction_encoding = "10010 " + asm_counter("sp" ) + asm_size(tokens[1]) + asm_reg(tokens[2])
             
             if opcode == "add3" and token_count==4:
                 instruction_encoding = "1110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_reg(tokens[3])

@@ -16,6 +16,7 @@ int Memory::read_bit(int ctr){
 
 void Memory::write_bit(int ctr, int bit){
 	if(bit!=0 && bit!=1)  {
+		// if bit == 2 ça plante bien
 		throw "Expecting a bit (0 or 1)";
 	} 
 	uint64_t word_addr = counter[ctr]>>6;
@@ -29,6 +30,7 @@ void Memory::write_bit(int ctr, int bit){
 	//std::cerr << std::hex << std::setw(16) <<  m[word_addr] << "  " << word <<std::endl; 
 	m[word_addr] = word;
 	counter[ctr] ++;
+
 }
 
 void Memory::set_counter(int ctr, uword val){
