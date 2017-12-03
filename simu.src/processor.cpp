@@ -269,6 +269,7 @@ void Processor::von_Neuman_step(bool debug) {
 				m->write_bit(counter, (r[regnum1] & fullr)>>ii);
 				fullr = fullr << 1;
 			}
+			manage_flags=false;		
 			break;
 		case 0b110101: //call
 				read_addr_from_pc(offset);
@@ -282,11 +283,13 @@ void Processor::von_Neuman_step(bool debug) {
 			read_counter_from_pc(counter);
 			read_reg_from_pc(regnum1);
 			m -> set_counter(counter, r[regnum1]);
+			manage_flags=false;		
 			break;
 		case 0b110111: //getctr
 			read_counter_from_pc(counter);
 			read_reg_from_pc(regnum1);
 			r[regnum1] = m->counter[counter];
+			manage_flags=false;		
 			break;
 		}
 		break;
@@ -313,10 +316,12 @@ void Processor::von_Neuman_step(bool debug) {
 			}
 
 			m->set_counter(SP, m->counter[SP] - size);
+			manage_flags=false;		
 			break;
 		case 0b1110001: // return
 				pc = r[7];
 				m -> set_counter(PC, (uword)pc);
+			manage_flags=false;		
 			break;
 		case 0b1110010: // add3
 			read_reg_from_pc(regnum1);

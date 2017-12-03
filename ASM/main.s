@@ -170,8 +170,9 @@ return
 drawdx<dy:
 
 
-leti r0 0x00FF
 
+push 16 r3
+push 16 r4
 push 16 r3
 push 16 r4
 pop 16 r3 ; swapped y2 and x2
@@ -220,6 +221,8 @@ pop 16 r4
 pop 16 r2
 pop 32 r5
 pop 16 r1
+pop 16 r4
+pop 16 r3
 
 return
 
@@ -230,9 +233,10 @@ return
 drawdx>dy1:
 
 
-leti r0 0x100F
 
 
+pop 16 r4
+pop 16 r3
 
 push 16 r1
 push 32 r5
@@ -285,8 +289,12 @@ return
 drawdx<dy1:
 
 
-leti r0 0x00F0
 
+pop 16 r4
+pop 16 r3
+
+push 16 r3
+push 16 r4
 
 push 16 r3
 push 16 r4
@@ -315,28 +323,30 @@ sub2 r4 r2 ; dy = (y2 - y1 )* 2
 shift 0 r4 1
 asr3 r2 r6 1 ; dx = e * 2
 
-loop3:
+loop4:
 	setctr a0 r5
 	write a0 16 r0
-	add2i r5 16 ; x++
+	sub2i r5 2560 ; x++
 	add2i r1 1
 
 	sub2 r6 r4 ; e -= dy
-	jumpif 16 sgt break31
-		sub2i r5 2560 ; y++ si e <= 0
+	jumpif 16 sgt break41
+		add2i r5 16 ; y++ si e <= 0
 		add2 r6 r2 ; e += dx
 
-	break31:
+	break41:
 	cmp r1 r3
-	jumpif 16 gt break3
-	jump 16 loop3
+	jumpif 16 gt break4
+	jump 16 loop4
 
-break3:
+break4:
 pop 32 r6
 pop 16 r4
 pop 16 r2
 pop 32 r5
 pop 16 r1
+pop 16 r4
+pop 16 r3
 
 return
 
@@ -364,12 +374,10 @@ push 16 r4
 sub2 r3 r1 ; dx
 sub2 r4 r2 ; dy
 cmp r3 r4
-pop 16 r4
-pop 16 r3
 
-jumpif 16 gt drawdx<dy1
+jumpif 16 sgt drawdx>dy1
 ; dx < dy
-jump 16 drawdx>dy1
+jump 16 drawdx<dy1
 
 
 y1<y2:
@@ -390,17 +398,5 @@ jump 16 drawdx<dy
 ; à retenir 0xF1234 est un joli bleu
 ; 0x0F111 un rose qui va bien avec.. bref
 main:
-	leti r0 0xF000
-	leti r1 60
-	leti r2 60
-	leti r3 80
-	leti r4 65
-	;call draw
-	leti r3 65
-	leti r4 80
-	;call draw
-	leti r3 80
-	leti r4 55
-	;call draw
 
 	jump -13
