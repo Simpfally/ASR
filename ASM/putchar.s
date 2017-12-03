@@ -15,7 +15,7 @@ setctr a0 r3
 readze r3 32 a0
 readze r4 32 a0
 
-add3i r6 r2 8
+add3i r6 r2 4
 
 
 loopy:
@@ -37,14 +37,16 @@ loopy:
     		jumpif eq 16 endif1
 	  	write a0 16 r0
     		endif1:
+		pop 32 r4 
     		add2i r1 1
 	  	cmp r1 8
 	  	jumpif 16 gt xbreak
 	  	add2i r5 16
+		shift 0 r4 1
 	  	jump 16 loopx
     	xbreak:
 
-  	cmp r2 r4
+  	cmp r2 r6
   	jumpif 16 gt ybreak
   	add2i r2 1
   	pop 16 r1
