@@ -1,6 +1,9 @@
 ;;draw
 ;; trace une ligne de couleur r0 entre les points de coordonnée (r1,r2) et (r3,r4)
 ;; Comment faire pour tracer des lignes de bas en haut et de haut en bas??
+
+;; bug : ao devient trop grand et write a0 16 r0 fait une segmentation fault
+
 jump 16 main
 
 draw:
@@ -24,7 +27,7 @@ add2i r1 1
 
 add2 r5 r6
 cmpi r5 0
-jumpif lt 16 endif ;;if (e ← e+e(1,0) >= 0) Ici je sais pas si la valeur de e doit etre modifiée mais je pense que oui (c'est fait) 
+jumpif 16 lt endif ;;if (e ← e+e(1,0) >= 0) Ici je sais pas si la valeur de e doit etre modifiée mais je pense que oui (c'est fait) 
 add2i r2 1 ;;y ← y+1
 add2 r5 r7 ;;e ← e+e(0,1)
 endif:
@@ -36,6 +39,7 @@ pop 16 r7
 
 return
 
+;;;;;;;;;;;;;;;;;;; MAIN
 main:
 leti r0 0xF123
 leti r1 10
@@ -44,3 +48,32 @@ leti r3 100
 leti r4 30
 call draw
 jump -13
+
+
+;;plot
+;;affiche un point de couleur r0 aux coordonnées (r1,r2)
+;;utilise r3
+
+;; (0,0) -----> (159, 0)
+;;   |
+;;   V
+;; (0, 127)
+
+plot:
+
+push 32 r3 ;;pour pas perdre notre registre quand on exécute la fonction
+
+let r3 r1
+shift 0 r2 5
+add2 r3 r2
+shift 0 r2 2
+add2 r3 r2
+shift 0 r3 4
+add2i r3 0x10000
+
+setctr a0 r3
+write a0 16 r0
+
+pop 32 r3
+
+return
