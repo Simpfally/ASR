@@ -118,7 +118,7 @@ return
 
 ;;draw : trace une ligne de couleur r0 entre les points de coordonnée (r1,r2) et (r3,r4)
 ;; dx > dy
-draw:
+drawdx>dy:
 
 push 16 r1
 push 32 r5
@@ -163,6 +163,19 @@ pop 32 r5
 pop 16 r1
 
 return
+
+draw:
+
+push 16 r3
+push 16 r4
+sub2 r3 r1 ; dx
+sub2 r4 r2 ; dy
+cmp r3 r4
+pop 16 r4
+pop 16 r3
+jumpif 16 gt drawdx>dy
+
+
 
 
 ; à retenir 0xF1234 est un joli bleu
