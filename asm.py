@@ -78,7 +78,7 @@ def asm_const_unsigned(s):
             return '110 ' + binary_repr(val, 32)
         else:
             return '111 ' +  binary_repr(val, 64)
-        else:
+    else:
         error("Expecting a constant, got " + s)
 
         
@@ -149,7 +149,9 @@ def asm_pass(iteration, s_file):
     global labels
     global current_address
     code =[] # array of strings, one entry per instruction
+
     print "\n PASS " + str(iteration)
+
     current_address = 0
     source = open(s_file)
     for source_line in source:
@@ -298,7 +300,7 @@ def asm_pass(iteration, s_file):
             if opcode == "xor3i" and token_count==4:
                 instruction_encoding = "1111011 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_const_unsigned(tokens[3])
             if opcode == "asr3" and token_count==4:
-                instruction_encoding = "1110110 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_shiftval(tokens[3])
+                instruction_encoding = "1111110 " + asm_reg(tokens[1]) + asm_reg(tokens[2]) + asm_shiftval(tokens[3])
 
             # If the line wasn't assembled:
             if instruction_encoding=="":

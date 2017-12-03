@@ -424,10 +424,19 @@ void Processor::von_Neuman_step(bool debug) {
 			r[regnum1] = ur;
 			manage_flags  = true;
 			break;
-		case 0b1111100: // asr3
-			//TODO
-			break;
-		}
+		case 0b1111110: // asr3
+			read_reg_from_pc(regnum1);
+			read_reg_from_pc(regnum2);
+			read_shiftval_from_pc(shiftval);
+			uop2 = r[regnum2];
+			cflag = ( ((uop2 << (shiftval-1)) & (1L<<(WORDSIZE-1))) != 0);
+			ur = uop2 << shiftval;
+			r[regnum1] = ur;
+			zflag = (ur==0);
+			// no change to nflag
+			manage_flags=false;		
+				break;
+			}
 		break;
 	}
 	
@@ -440,7 +449,7 @@ void Processor::von_Neuman_step(bool debug) {
 	}
 
 	if (debug) {
-		cout << "pc=" << dec << instr_pc << "r0=" << r[0] <<"r1=" << r[1] << endl;
+		cout << "pc=" << dec << instr_pc << "  r0=" << r[0] <<"  r1=" << r[1] << endl;
 		cout << "after instr: " << opcode 
 				 << " at pc=" << hex << setw(8) << setfill('0') << instr_pc
 				 << " (newpc=" << hex << setw(8) << setfill('0') << pc
@@ -449,7 +458,7 @@ void Processor::von_Neuman_step(bool debug) {
 				 << " ma0=" << hex << setw(8) << setfill('0') << m->counter[2] 
 				 << " ma1=" << hex << setw(8) << setfill('0') << m->counter[3] << ") ";
 			//				 << " newpc=" << hex << setw(9) << setfill('0') << pc;
-		cout << " zcn = " << (zflag?1:0) << (cflag?1:0) << (nflag?1:0);
+		cout << " zcvn = " << (zflag?1:0) << (cflag?1:0) << (vflag?1:0)  << (nflag?1:0);
 		for (int i=0; i<8; i++)
 			cout << " r"<< dec << i << "=" << hex << setw(8) << setfill('0') << r[i];
 		cout << endl;
