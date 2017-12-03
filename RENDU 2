@@ -5,7 +5,7 @@ Rendu 2 : http://perso.citi-lab.fr/fdedinec/enseignement/2017/ASR1/DM.pdf
 ->>>>done Implémenter toute les instructions
 ->>>>done Implémenter les labels et saut sur label (opti ou pas)
 ->>>>done clear_screen (r0)
-->> demander de l'aide pour l'histoire des constantes signés + vérifier que readse a un sens #Sebastien t'a répondu
+->> demander de l'aide pour l'histoire des constantes signées + vérifier que readse a un sens #Sebastien t'a répondu
 ->> plot (r1, r2) en r0 #to test
 ->> fill : rectangle en r0 de (r1,r2) à (r3, r4) #to test
 ->> draw : ligne en r0 (r1,r2) à (r3, r4) #to complete
