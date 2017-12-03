@@ -9,7 +9,7 @@ push 32 r4
 push 16 r5
 push 16 r6
 
-shift 0 r3 6 ; r3*64
+shift 0 r3 6 ; r3 =r3*64
 add2i r3 0x100000
 setctr a0 r3
 readze r3 32 a0
