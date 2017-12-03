@@ -1,5 +1,6 @@
 ;;plot
 ;;affiche un point de couleur r0 aux coordonnées (r1,r2)
+;;utilise r3
 
 ;; (0,0) -----> (159, 0)
 ;;   |
@@ -9,7 +10,7 @@ jump 16 main
 
 plot:
 
-push 16 r3 ;;pour pas perdre notre registre quand on exécute la fonction
+push 32 r3 ;;pour pas perdre notre registre quand on exécute la fonction
 
 let r3 r1
 shift 0 r2 5
@@ -22,7 +23,7 @@ add2i r3 0x10000
 setctr a0 r3
 write a0 16 r0
 
-pop 16 r3
+pop 32 r3
 
 return
 

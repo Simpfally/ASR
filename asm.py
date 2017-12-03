@@ -234,7 +234,7 @@ def asm_pass(iteration, s_file):
                 instruction_encoding = "1010 " + addyb
             if opcode == "jumpif" and token_count==3:
                 instruction_encoding = "1011 " + asm_condition(tokens[1]) + asm_addr_signed(tokens[2])
-            if opcode == "jumpif" and token_count==4:
+            if opcode == "jumpif" and token_count==4: # size cond lbl
                 size_asked = int(tokens[1])
                 if tokens[3] in labels:
                     intr_size = 0
@@ -265,7 +265,7 @@ def asm_pass(iteration, s_file):
                 if lbl in labels:
                     instruction_encoding = "110101 " + asm_addr_signed(str(labels[lbl]), 32)
                 elif iteration == 1:
-                    instruction_encoding = "110101 " + asm_addr_signed(0, 32)
+                    instruction_encoding = "110101 " + asm_addr_signed(str(0), 32)
                 else:
                     error("label" + lbl + "non enregistre (call)")
 
