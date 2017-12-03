@@ -120,6 +120,8 @@ return
 ;; dx > dy
 drawdx>dy:
 
+
+
 push 16 r1
 push 32 r5
 push 16 r2 ; dx
@@ -139,23 +141,80 @@ sub2 r4 r2 ; dy = (y2 - y1 )* 2
 shift 0 r4 1
 asr3 r2 r6 1 ; dx = e * 2
 
-loop:
+loop1:
 	setctr a0 r5
 	write a0 16 r0
 	add2i r5 16 ; x++
 	add2i r1 1
 
 	sub2 r6 r4 ; e -= dy
-	jumpif 16 sgt break1
+	jumpif 16 sgt break11
 		add2i r5 2560 ; y++ si e <= 0
 		add2 r6 r2 ; e += dx
 
-	break1:
+	break11:
 	cmp r1 r3
-	jumpif 16 gt break
-	jump 16 loop
+	jumpif 16 gt break1
+	jump 16 loop1
 
-break:
+break1:
+pop 32 r6
+pop 16 r4
+pop 16 r2
+pop 32 r5
+pop 16 r1
+
+return
+;;;;;;;;;
+
+drawdx<dy:
+
+
+leti r0 0x00FF
+
+push 16 r3
+push 16 r4
+pop 16 r3 ; swapped y2 and x2
+pop 16 r4 ;
+
+
+push 16 r1
+push 32 r5
+push 16 r2 ; dx
+push 16 r4 ; dy
+push 32 r6 ; e
+
+
+asr3 r5 r2 5
+shift 0 r2 7
+add2 r5 r2
+shift 1 r2 7
+add2 r5 r1
+shift 0 r5 4
+add2i r5 0x10000
+
+sub3 r6 r3 r1 ; e = x2 - x1
+sub2 r4 r2 ; dy = (y2 - y1 )* 2
+shift 0 r4 1
+asr3 r2 r6 1 ; dx = e * 2
+
+loop2:
+	setctr a0 r5
+	write a0 16 r0
+	add2i r5 2560 ; x++
+	add2i r1 1
+
+	sub2 r6 r4 ; e -= dy
+	jumpif 16 sgt break21
+		add2i r5 16 ; y++ si e <= 0
+		add2 r6 r2 ; e += dx
+
+	break21:
+	cmp r1 r3
+	jumpif 16 gt break2
+	jump 16 loop2
+
+break2:
 pop 32 r6
 pop 16 r4
 pop 16 r2
@@ -164,8 +223,156 @@ pop 16 r1
 
 return
 
+;;;;;;;;
+
+;;;;;;;;;
+
+drawdx>dy1:
+
+
+leti r0 0x100F
+
+
+
+push 16 r1
+push 32 r5
+push 16 r2 ; dx
+push 16 r4 ; dy
+push 32 r6 ; e
+
+sub3 r4 r2 r4
+add2 r4 r2
+
+asr3 r5 r2 5
+shift 0 r2 7
+add2 r5 r2
+shift 1 r2 7
+add2 r5 r1
+shift 0 r5 4
+add2i r5 0x10000
+
+sub3 r6 r3 r1 ; e = x2 - x1
+sub2 r4 r2 ; dy = (y2 - y1 )* 2
+shift 0 r4 1
+asr3 r2 r6 1 ; dx = e * 2
+
+loop3:
+	setctr a0 r5
+	write a0 16 r0
+	add2i r5 16 ; x++
+	add2i r1 1
+
+	sub2 r6 r4 ; e -= dy
+	jumpif 16 sgt break31
+		sub2i r5 2560 ; y++ si e <= 0
+		add2 r6 r2 ; e += dx
+
+	break31:
+	cmp r1 r3
+	jumpif 16 gt break3
+	jump 16 loop3
+
+break3:
+pop 32 r6
+pop 16 r4
+pop 16 r2
+pop 32 r5
+pop 16 r1
+
+return
+
+;;;;;;;;;
+drawdx<dy1:
+
+
+leti r0 0x00F0
+
+
+push 16 r3
+push 16 r4
+pop 16 r3 ; swapped y2 and x2
+pop 16 r4 ;
+
+push 16 r1
+push 32 r5
+push 16 r2 ; dx
+push 16 r4 ; dy
+push 32 r6 ; e
+
+sub3 r4 r2 r4
+add2 r4 r2
+
+asr3 r5 r2 5
+shift 0 r2 7
+add2 r5 r2
+shift 1 r2 7
+add2 r5 r1
+shift 0 r5 4
+add2i r5 0x10000
+
+sub3 r6 r3 r1 ; e = x2 - x1
+sub2 r4 r2 ; dy = (y2 - y1 )* 2
+shift 0 r4 1
+asr3 r2 r6 1 ; dx = e * 2
+
+loop3:
+	setctr a0 r5
+	write a0 16 r0
+	add2i r5 16 ; x++
+	add2i r1 1
+
+	sub2 r6 r4 ; e -= dy
+	jumpif 16 sgt break31
+		sub2i r5 2560 ; y++ si e <= 0
+		add2 r6 r2 ; e += dx
+
+	break31:
+	cmp r1 r3
+	jumpif 16 gt break3
+	jump 16 loop3
+
+break3:
+pop 32 r6
+pop 16 r4
+pop 16 r2
+pop 32 r5
+pop 16 r1
+
+return
+
+;;;;;;;;;
+;;
+
+
 draw:
 
+cmp r3 r1
+jumpif 16 gt x1<x2
+; x1 > x2 ;; suffit d'inverser x1 y1 <-> x2 y2
+push 16 r1
+push 16 r2
+pop 16 r4
+pop 16 r3
+jump 16 draw
+
+x1<x2:
+cmp r4 r2
+jumpif 16 gt y1<y2
+; y1 > y2
+push 16 r3
+push 16 r4
+sub2 r3 r1 ; dx
+sub2 r4 r2 ; dy
+cmp r3 r4
+pop 16 r4
+pop 16 r3
+
+jumpif 16 gt drawdx<dy1
+; dx < dy
+jump 16 drawdx>dy1
+
+
+y1<y2:
 push 16 r3
 push 16 r4
 sub2 r3 r1 ; dx
@@ -174,6 +381,8 @@ cmp r3 r4
 pop 16 r4
 pop 16 r3
 jumpif 16 gt drawdx>dy
+; dx < dy
+jump 16 drawdx<dy
 
 
 
@@ -182,10 +391,16 @@ jumpif 16 gt drawdx>dy
 ; 0x0F111 un rose qui va bien avec.. bref
 main:
 	leti r0 0xF000
-	leti r1 10
-	leti r2 10
-	leti r3 40
-	leti r4 15
-	call draw
+	leti r1 60
+	leti r2 60
+	leti r3 80
+	leti r4 65
+	;call draw
+	leti r3 65
+	leti r4 80
+	;call draw
+	leti r3 80
+	leti r4 55
+	;call draw
 
 	jump -13
