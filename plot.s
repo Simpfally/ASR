@@ -14,7 +14,7 @@ add2 r3 r2
 shift 0 r3 4
 add2 r3 0x10000
 
-setsctr a0 r3
+setctr a0 r3
 write a0 16 r0
 
 pop 16 r3
