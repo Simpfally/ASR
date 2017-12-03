@@ -11,6 +11,7 @@ Rendu 2 : http://perso.citi-lab.fr/fdedinec/enseignement/2017/ASR1/DM.pdf
 ->>bug draw : ligne en r0 (r1,r2) à (r3, r4) #to test
 ->>>>done trouver caractères 8x8 #https://github.com/dhepper/font8x8
 - les importers dans le processeur direct?
+- faire le trucs des constantes dans asm.py
 - putchar : code ascii en r3, lettre 8x8 en (r1, r2)
 - Afficher une droite, un rectangle et nos initials.
 - peut-être refaire quelque truc pour pas utiliser counter[] si y a vraiment besoin
