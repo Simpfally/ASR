@@ -12,8 +12,8 @@ push 16 r6
 shift 0 r3 6 ; r3 =r3*64
 add2i r3 0x100000
 setctr a0 r3
-readze r3 32 a0
-readze r4 32 a0
+readze a0 32 r3
+readze a0 32 r4
 
 add3i r6 r2 4
 
@@ -32,14 +32,14 @@ loopy:
     	loopx:
 		setctr a0 r5
     		push 32 r4
-    		andi r4 1
-  		cmp r4 0
-    		jumpif eq 16 endif1
+    		add2i r4 1
+  		cmpi r4 0
+    		jumpif 16 eq endif1
 	  	write a0 16 r0
     		endif1:
 		pop 32 r4 
     		add2i r1 1
-	  	cmp r1 8
+	  	cmpi r1 8
 	  	jumpif 16 gt xbreak
 	  	add2i r5 16
 		shift 0 r4 1
@@ -70,14 +70,14 @@ loopy:
     	loopx:
 		setctr a0 r5
     		push 32 r3
-    		andi r3 1
-  		cmp r3 0
-    		jumpif eq 16 endif1
+    		add2i r3 1
+  		cmpi r3 0
+    		jumpif 16 eq endif1
 	  	write a0 16 r0
     		endif1:
 		pop 32 r3 
     		add2i r1 1
-	  	cmp r1 8
+	  	cmpi r1 8
 	  	jumpif 16 gt xbreak
 	  	add2i r5 16
 		shift 0 r3 1
@@ -99,3 +99,5 @@ pop 32 r3
 return
 
 main:
+
+leti r0 20
