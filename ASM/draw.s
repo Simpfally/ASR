@@ -26,9 +26,10 @@ pop 16 r7
 addi r1 1
 
 ;; Ici le if à gérer je sais pas comment faire (je comprends moyen les jumps avec les adresses...)
-if (e+e(1,0) >= 0) 
+if (e ← e+e(1,0) >= 0) ;; Ici je sais pas si la valeur de e doit etre modifiée mais je pense que oui 
   then { add r2 1
-         
+         e ← e+e(0,1)
+       }
 
 cmp r3 r1
 jumpif 16 ge loop
@@ -38,3 +39,10 @@ pop 16 r7
 return
 
 main:
+leti r0 0xF123
+leti r1 10
+leti r2 10
+leti r3 100
+leti r4 100
+call draw
+jump -13
