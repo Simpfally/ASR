@@ -3,11 +3,11 @@ jump 16 main
 plot:
 
 let r3 r1
-shift r2 5
+shift 0 r2 5
 add2 r3 r2
-shift r2 2
+shift 0 r2 2
 add2 r3 r2
-shift r3 4
+shift 0 r3 4
 add2 r3 0x10000
 
 setsctr a0 r3
