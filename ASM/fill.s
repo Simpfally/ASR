@@ -4,6 +4,12 @@
 jump 16 main
 
 fill:
+
+push 16 r5
+push 16 r6
+push 16 r2
+push 16 r1
+
 let r5 r1
 shift 0 r2 5
 add2 r5 r2
@@ -33,6 +39,11 @@ jumpif 16 ge loop1
 addi r5 r6
 cmp r4 r2
 jumpif 16 ge loop0
+
+pop 16 r1
+pop 16 r2
+pop 16 r5
+pop 16 r6
 
 return
 
