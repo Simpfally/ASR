@@ -9,8 +9,14 @@ push 32 r4
 push 16 r5
 push 16 r6
 
-leti r6 0x10000
-leti r5 152
+asr3 r5 r2 5 	; r5 <- r2 << 5
+shift 0 r2 7
+add2 r5 r2 	; r5 += r2 << 7
+shift 1 r2 7
+shift 0 r5 4 	; r5 << 4
+add2i r5 0x10000
+
+leti r6 152
 
 
 loop0:
