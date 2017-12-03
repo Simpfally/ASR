@@ -25,32 +25,32 @@ loopy:
 	shift 1 r2 7
 	add2 r5 r1
 	shift 0 r5 4
-  add2i r5 0x10000
-  push 16 r1
-  leti r1 0
+  	add2i r5 0x10000
+  	push 16 r1
+  	leti r1 0
 
-    loopx:
-	  setctr a0 r5
-    push 32 r4
-    andi r4 1
-    cmp r4 0
-    jumpif eq 16 endif1
-	  write a0 16 r0
-    endif1:
-    add2i r1 1
-	  cmp r1 8
-	  jumpif 16 gt xbreak
-	  add2i r5 16
-	  jump 16 loopx
-    xbreak:
+    	loopx:
+		setctr a0 r5
+    		push 32 r4
+    		andi r4 1
+  		cmp r4 0
+    		jumpif eq 16 endif1
+	  	write a0 16 r0
+    		endif1:
+    		add2i r1 1
+	  	cmp r1 8
+	  	jumpif 16 gt xbreak
+	  	add2i r5 16
+	  	jump 16 loopx
+    	xbreak:
 
-  cmp r2 r4
-  jumpif 16 gt ybreak
-  add2i r2 1
-  pop 16 r2
-  pop 16 r1
-  jump 16 loopy
-  ybreak:
+  	cmp r2 r4
+  	jumpif 16 gt ybreak
+  	add2i r2 1
+  	pop 16 r2
+  	pop 16 r1
+  	jump 16 loopy
+  	ybreak:
 
 return
 
