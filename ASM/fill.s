@@ -12,20 +12,27 @@ add2 r5 r2
 shift 0 r5 4
 add2i r5 0x10000
 
-let r6 r3
-shift 0 r4 5
-add2 r6 r4
-shift 0 r4 2
-add2 r6 r4
+;; pour savoir de combien se décaler après une ligne
+leti r6 160
+sub r6 r3
+add r6 r1
 shift 0 r6 4
-addi r6 1
 
+push 16 r1
+loop0:
+add r2 1
+pop 16 r1
+push 16 r1
 setctr a0 r5
-loop:
+loop1:
 write a0 16 r0
 addi r5 16
-cmp r5 r6
-jumpif 16 lt loop
+addi r1 1
+cmp r3 r1
+jumpif 16 ge loop1
+addi r5 r6
+cmp r4 r2
+jumpif 16 ge loop0
 
 return
 
