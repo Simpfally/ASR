@@ -77,11 +77,55 @@ return
 ;; remplit un rectangle (r1,r2),(r3,r4) de la couleur r0 avec la convention (r1>r3)&(r2>r4)
 fill:
 
-push 32 r5
-push 16 r2
-push 16 r1
+	push 32 r5
+	push 16 r2
+	push 16 r1
 
-loopy:
+	fillloopy:
+		asr3 r5 r2 5
+		shift 0 r2 7
+		add2 r5 r2
+		shift 1 r2 7
+		add2 r5 r1
+		shift 0 r5 4
+		add2i r5 0x10000
+
+		fillloopx:
+			setctr a0 r5
+			write a0 16 r0
+			add2i r1 1
+			cmp r1 r3
+			jumpif 16 gt fillbreak
+			add2i r5 16
+			jump 16 fillloopx
+		fillbreak:
+
+
+		cmp r2 r4
+		jumpif 16 gt fillbreak2
+		add2i r2 1
+		pop 16 r1
+		push 16 r1
+		jump 16 fillloopy
+
+	fillbreak2:
+
+	pop 16 r2
+	pop 16 r1
+	pop 32 r5
+
+return
+
+;;draw : trace une ligne de couleur r0 entre les points de coordonnée (r1,r2) et (r3,r4)
+;; dx > dy
+draw:
+
+push 16 r1
+push 32 r5
+push 16 r2 ; dx
+push 16 r4 ; dy
+push 32 r6 ; e
+
 asr3 r5 r2 5
 shift 0 r2 7
 add2 r5 r2
@@ -90,31 +134,36 @@ add2 r5 r1
 shift 0 r5 4
 add2i r5 0x10000
 
-loopx:
-setctr a0 r5
-write a0 16 r0
-add2i r1 1
-cmp r1 r3
-jumpif 16 gt break
-add2i r5 16
-jump 16 loopx
+sub3 r6 r3 r1 ; e = x2 - x1
+sub2 r4 r2 ; dy = (y2 - y1 )* 2
+shift 0 r4 1
+asr3 r2 r6 1 ; dx = e * 2
+
+loop:
+	setctr a0 r5
+	write a0 16 r0
+	add2i r5 16 ; x++
+	add2i r1 1
+
+	sub2 r6 r4 ; e -= dy
+	jumpif 16 sgt break1
+		add2i r5 2560 ; y++ si e <= 0
+		add2 r6 r2 ; e += dx
+
+	break1:
+	cmp r1 r3
+	jumpif 16 gt break
+	jump 16 loop
+
 break:
-
-
-cmp r2 r4
-jumpif 16 gt break2
-add2i r2 1
-pop 16 r1
-push 16 r1
-jump 16 loopy
-
-break2:
-
+pop 32 r6
+pop 16 r4
 pop 16 r2
-pop 16 r1
 pop 32 r5
+pop 16 r1
 
 return
+
 
 ; à retenir 0xF1234 est un joli bleu
 ; 0x0F111 un rose qui va bien avec.. bref
@@ -122,8 +171,8 @@ main:
 	leti r0 0xF000
 	leti r1 10
 	leti r2 10
-	leti r3 15
+	leti r3 40
 	leti r4 15
-	call fill
+	call draw
 
 	jump -13
