@@ -6,7 +6,7 @@ leti r3 0x10000
 setsctr a0 r3
 
 write a0 16 r0
-;;décalage.... Je vois pas comment faire autrement
+;;décalage.... Je vois pas comment faire autrement..
 add2 r2 r2
 add2 r2 r2
 add2 r2 r2
