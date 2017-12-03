@@ -9,8 +9,8 @@ push 32 r4
 push 16 r5
 push 16 r6
 
+add2i r3 255
 shift 0 r3 6 ; r3 =r3*64
-add2i r3 0x100000
 setctr a0 r3
 readze a0 32 r3
 readze a0 32 r4
@@ -101,3 +101,8 @@ return
 main:
 
 leti r0 20
+leti r1 20
+leti r2 20
+
+leti r3 80
+call putchar
