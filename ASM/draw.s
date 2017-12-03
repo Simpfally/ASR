@@ -13,7 +13,7 @@ sub3 r5 r1 r3 ;;dx ← x2 - x1 et e ← -dx (valeur d’erreur initiale)
 ;; y ← y1: on utilisera directement r2 (rangée initiale)
 shift 0 r6 1 ;;e(1,0) ← dy × 2 
 let r7 r5
-shift r7 1 ;;e(0,1) ← -dx × 2  (si le shift marche pour les négatifs)
+shift 0 r7 1 ;;e(0,1) ← -dx × 2  (si le shift marche pour les négatifs)
 
 loop:
 ;;la valeur de plot est écrasée à l'appel de call donc il faut l'empiler juste avant et le dépiler juste après
@@ -25,7 +25,7 @@ add2i r1 1
 add2 r5 r6
 cmpi r5 0
 jumpif lt 16 endif ;;if (e ← e+e(1,0) >= 0) Ici je sais pas si la valeur de e doit etre modifiée mais je pense que oui (c'est fait) 
-add2i r2 1 ;;y 
+add2i r2 1 ;;y ← y+1
 add2 r5 r7 ;;e ← e+e(0,1)
 endif:
 
@@ -41,6 +41,6 @@ leti r0 0xF123
 leti r1 10
 leti r2 10
 leti r3 100
-leti r4 100
+leti r4 30
 call draw
 jump -13
