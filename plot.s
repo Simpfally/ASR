@@ -1,6 +1,10 @@
+;;plot
+;;affiche un point de couleur r0 aux coordonnées (r1,r2)
 jump 16 main
 
 plot:
+
+push 16 r3 ;;pour pas perdre notre registre quand on execute la fonction
 
 let r3 r1
 shift 0 r2 5
@@ -12,6 +16,8 @@ add2 r3 0x10000
 
 setsctr a0 r3
 write a0 16 r0
+
+pop 16 r3
 
 return
 
