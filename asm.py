@@ -186,11 +186,11 @@ def asm_pass(iteration, s_file):
             if opcode == "add2" and token_count==3:
                 instruction_encoding = "0000 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "add2i" and token_count==3:
-                instruction_encoding = "0001 " + asm_reg(tokens[1]) + asm_const_signed(tokens[2])
+                instruction_encoding = "0001 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
             if opcode == "sub2" and token_count==3:
                 instruction_encoding = "0010 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
             if opcode == "sub2i" and token_count==3:
-                instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_signed(tokens[2]) 
+                instruction_encoding = "0011 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
 
             if opcode == "cmp" and token_count==3:
                 instruction_encoding = "0100 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
@@ -257,6 +257,15 @@ def asm_pass(iteration, s_file):
                     else: 
                         addyb = asm_addr_signed(str(10), size_asked)
                 instruction_encoding = "1011 " + asm_condition(tokens[2]) +addyb
+
+            if opcode == "or2" and token_count==3:
+                instruction_encoding = "110000 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
+            if opcode == "or2i" and token_count==3:
+                instruction_encoding = "110001 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2]) 
+            if opcode == "and2" and token_count==3:
+                instruction_encoding = "110010 " + asm_reg(tokens[1]) + asm_reg(tokens[2])
+            if opcode == "and2i" and token_count==3:
+                instruction_encoding = "110011 " + asm_reg(tokens[1]) + asm_const_unsigned(tokens[2])
 
             if opcode == "write" and token_count==4: 
                 instruction_encoding = "110100 " + asm_counter(tokens[1]) + asm_size(tokens[2]) + asm_reg(tokens[3])
