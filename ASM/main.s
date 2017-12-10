@@ -399,6 +399,17 @@ jump 16 drawdx<dy
 ; 0x0F111 un rose qui va bien avec.. bref
 main:
 
-	
+	leti r0 0xF000
+	leti r1 60
+	leti r2 60
+	leti r3 80
+	leti r4 65
+	;call draw
+	leti r3 65
+	leti r4 80
+	;call draw
+	leti r3 65
+	leti r4 25
+	call draw
 
 	jump -13

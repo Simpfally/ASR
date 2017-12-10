@@ -119,9 +119,9 @@ void Processor::von_Neuman_step(bool debug) {
 		
 	case 0x5: //cmpi 
 		read_reg_from_pc(regnum1);
-		read_const_from_pc(constop);
+		read_const_signed_from_pc(offset);
 		uop1 = r[regnum1];
-		uop2 = constop;
+		uop2 = offset;
 		fullr = ((doubleword) uop1) - ((doubleword) uop2); //for flags
 		ur = uop1 - uop2;
 		manage_flags=true;
@@ -138,8 +138,9 @@ void Processor::von_Neuman_step(bool debug) {
 		
 	case 0x7: //leti// to test
 		read_reg_from_pc(regnum1);
-		read_const_from_pc(constop);
-		uop2 = constop;
+		read_const_signed_from_pc(offset);
+		printf("%d\n", offset);
+		uop2 = offset;
 		r[regnum1] = uop2;
 		manage_flags = false;
 		break;
@@ -522,6 +523,40 @@ void Processor::read_const_from_pc(uint64_t& var) {
 }
 
 
+void Processor::read_const_signed_from_pc(uword& var) {
+	var=0;
+	int header=0;
+	int size;
+	var=0;
+	read_bit_from_pc(header);
+	if(header==0)
+		size=1;
+	else  {
+		read_bit_from_pc(header);
+		if(header==2)
+			size=8;
+		else {
+			read_bit_from_pc(header);
+			if(header==6)
+				size=32;
+			else
+				size=64;
+		}
+	}
+	// Now we know the size and we can read all the bits of the constant.
+	for(int i=0; i<size; i++) {
+		var = (var<<1) + m->read_bit(PC);
+		pc++;
+	}
+
+	// sign extension
+	int sign= (var >> (size-1)) & 1;
+	if (sign && size != 1) {
+		for (int i=size; i<WORDSIZE; i++)
+			var += sign << i;
+	}
+
+}
 // Beware, this one is sign-extended
 void Processor::read_addr_from_pc(uword& var) {
 	var=0;
