@@ -198,15 +198,12 @@ int main(int argc, char* argv[]) {
 	};
 
 	int address = 255;
-	int is = 0;
+	long is = 0;
 	for (int x=0; x < 128; x++) {
 		for (int i = 0; i < 8; i++)  {
 			for (int k = 0; k < 8; k++) {
-				is = font[x][i] & 1 << k;
-				m->m[address + x] += (is << (i*k));
-				if(is) {
-					//printf("something at %d : %lu\n", address + x, m->m[address+x]);
-				}
+				is = (font[x][i] & 1 << k)>0;
+				m->m[address + x] += (is << (i*8 + k));
 			}
 		}
 	}
