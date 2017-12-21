@@ -1,0 +1,80 @@
+jump 16 main
+
+;; les fonctions
+
+leti r0 64512
+leti r1 53
+leti r2 53
+leti r3 105
+leti r4 65
+
+call fill
+
+leti r0 63328
+leti r1 0
+leti r2 0
+leti r1 53
+leti r2 53
+
+call draw
+
+leti r0 63328
+leti r1 0
+leti r2 0
+leti r1 53
+leti r2 65
+
+call draw
+
+leti r0 63328
+leti r1 105
+leti r2 53
+leti r1 160
+leti r2 128
+
+call draw
+
+leti r0 63328
+leti r1 105
+leti r2 65
+leti r1 160
+leti r2 128
+
+call draw
+
+leti r0 20000
+leti r1 55
+leti r2 55
+leti r3 86
+
+call putchar
+
+leti r0 15000
+leti r1 65
+leti r2 55
+leti r3 77
+
+call putchar
+
+leti r0 10000
+leti r1 75
+leti r2 55
+leti r3 47
+
+call putchar
+
+leti r0 5000
+leti r1 85
+leti r2 55
+leti r3 74
+
+call putchar
+
+leti r0 17500
+leti r1 95
+leti r2 55
+leti r3 80
+
+call putchar
+
+jump -13
