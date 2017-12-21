@@ -65,7 +65,6 @@ int main(int argc, char* argv[]) {
 
 	m->fill_with_obj_file(filename);
 
-	/////
 	int font[128][8] = {
 	    { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+0000 (nul)
 	    { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+0001
@@ -205,7 +204,7 @@ int main(int argc, char* argv[]) {
 				is = font[x][i] & 1 << k;
 				m->m[address + x] += (is << (i*k));
 				if(is) {
-					printf("something at %d : %lu\n", address + x, m->m[address+x]);
+					//printf("something at %d : %lu\n", address + x, m->m[address+x]);
 				}
 			}
 		}
