@@ -2,7 +2,7 @@ jump 16 main
 
 ;; les fonctions
 
-leti r0 rouge
+leti r0 64512
 leti r1 53
 leti r2 53
 leti r3 105
@@ -10,7 +10,7 @@ leti r4 65
 
 call fill
 
-leti r0 7000
+leti r0 63328
 leti r1 0
 leti r2 0
 leti r1 53
@@ -18,7 +18,7 @@ leti r2 53
 
 call draw
 
-leti r0 7000
+leti r0 63328
 leti r1 0
 leti r2 0
 leti r1 53
@@ -26,7 +26,7 @@ leti r2 65
 
 call draw
 
-leti r0 7000
+leti r0 63328
 leti r1 105
 leti r2 53
 leti r1 160
@@ -34,7 +34,7 @@ leti r2 128
 
 call draw
 
-leti r0 7000
+leti r0 63328
 leti r1 105
 leti r2 65
 leti r1 160
