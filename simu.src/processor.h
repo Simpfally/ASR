@@ -5,7 +5,7 @@ class Processor {
 	Processor(Memory* m);
 	~Processor();
 	int von_Neuman_step(bool debug);
-	long stat_instruc[100];
+	long stat_instruc[140];
 	long nb_ins;
 	long nb_mem_acc;
 

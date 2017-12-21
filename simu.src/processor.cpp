@@ -10,7 +10,7 @@ Processor::Processor(Memory* m): m(m) {
 	a2=0;
 	for (int i=0; i<7; i++)
 		r[i]=0;
-	for (int i=0; i<100; i++)
+	for (int i=0; i<140; i++)
 		stat_instruc[i]=0;
 	nb_ins = 0;
 	nb_mem_acc = 0;
@@ -477,6 +477,7 @@ int Processor::von_Neuman_step(bool debug) {
 	}
 	// STATISTIQUES
 	stat_instruc[opcode]++;
+	printf("%d opcode\n", opcode);
 	
 	// flag management
 	if(manage_flags) {
