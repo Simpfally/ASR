@@ -477,7 +477,6 @@ int Processor::von_Neuman_step(bool debug) {
 	}
 	// STATISTIQUES
 	stat_instruc[opcode]++;
-	printf("%d opcode\n", opcode);
 	
 	// flag management
 	if(manage_flags) {
