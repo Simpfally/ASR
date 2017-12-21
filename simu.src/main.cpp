@@ -224,8 +224,54 @@ int main(int argc, char* argv[]) {
 			getchar();
 	};
 
-	if(graphical_output)
-		screen->join();
+
+	//if(graphical_output)
+	//	screen->join();
+
+	printf("Statistiques sur %ld instructions:\n", p->nb_ins);
+	printf("%d bit accédé en mémoire.\n", p->nb_mem_acc);
+	const char* instr[40];
+	instr[0] = "add2";
+	instr[1] = "add2i";
+	instr[2] = "sub2";
+	instr[3] = "sub2i";
+	instr[4] = "cmp";
+	instr[5] = "cmpi";
+	instr[6] = "let";
+	instr[7] = "leti";
+	instr[8] = "shift";
+	instr[9] = "readze";
+	instr[10] = "readse";
+	instr[11] = "jump";
+	instr[12] = "jumpif";
+	instr[13] = "or2";
+	instr[14] = "or2i";
+	instr[15] = "and2";
+	instr[16] = "and2i";
+	instr[17] = "write";
+	instr[18] = "call";
+	instr[19] = "setctr";
+	instr[20] = "getctr";
+	instr[21] = "push";
+	instr[22] = "return";
+	instr[23] = "add3";
+	instr[24] = "add3i";
+	instr[25] = "sub3";
+	instr[26] = "sub3i";
+	instr[27] = "and3";
+	instr[28] = "and3i";
+	instr[29] = "or3";
+	instr[30] = "or3i";
+	instr[31] = "xor3";
+	instr[32] = "xor3i";
+	instr[33] = "asr3";
+	for (int i=0; i<=33; i++) {
+		if (p->stat_instruc[i])
+			printf("%s \t: %.2f%\n", instr[i], (float)p->stat_instruc[i]/float(p->nb_ins) * 100);
+	}
+
+	int wait = 0;
+	scanf("%d", &wait);
 
 	return 0;
 }

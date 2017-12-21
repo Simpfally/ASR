@@ -3,7 +3,7 @@ sub2i r0 1
 sub2i r0 1
 sub2i r0 1
 
-leti r0 0xF
+leti r0 0xFF
 shift 0 r0 6
 setctr a0 r0
 leti r1 -1

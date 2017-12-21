@@ -12,6 +12,8 @@ Processor::Processor(Memory* m): m(m) {
 		r[i]=0;
 	for (int i=0; i<100; i++)
 		stat_instruc[i]=0;
+	nb_ins = 0;
+	nb_mem_acc = 0;
 }
 
 Processor::~Processor()
@@ -25,13 +27,19 @@ int vflag_add(uword a, uword b) {
 int vflag_sub(uword a, uword b) {
 	sword x = (sword) a;
 	sword y = (sword) b;
-	return ((x^y) >= 0) && ((x ^ (x -y)) < 0);
+	int s =!( x > 0 && y > 0 || x < 0 && y < 0);
+	if (s) {
+		if ((x < 0 && (x-y) > 0) || (x > 0 && (x-y) < 0)) {
+			return 1;
+		}
+	}
+	return 0;
 }
 
 int Processor::von_Neuman_step(bool debug) {
 	// numbers read from the binary code
 	int opcode=0;
-	int b = 1 && debug; // continue?
+	int b = 1; // continue?
 	int regnum1=0;
 	int regnum2=0;
 	int regnum3=0;
@@ -51,6 +59,7 @@ int Processor::von_Neuman_step(bool debug) {
 	doubleword fullr;
 	bool manage_flags=false; // used to factor out the flag management code
 	int instr_pc = pc; // for the debug output
+	nb_ins++;
 	
 	// read 4 bits.
 	read_bit_from_pc(opcode);
@@ -166,14 +175,19 @@ int Processor::von_Neuman_step(bool debug) {
 		manage_flags=false;
 		break;
 		
-	case 0x8: // shift// to test
+	case 0x8: // shift// oh my god
 		read_bit_from_pc(dir);
 		read_reg_from_pc(regnum1);
 		read_shiftval_from_pc(shiftval);
 		uop1 = r[regnum1];
 		if(dir==1){ // right shift
-			ur = uop1 >> shiftval;
-			cflag = ( ((uop1 >> (shiftval-1))&1) == 1);
+			if (int(uop1) < 0) {
+				ur = -((-int(uop1)) >> shiftval);
+				cflag = 0;
+			} else {
+				ur = uop1 >> shiftval;
+				cflag = ( ((uop1 >> (shiftval-1))&1) == 1);
+			}
 		}
 		else{
 			cflag = ( ((uop1 << (shiftval-1)) & (1L<<(WORDSIZE-1))) != 0);
@@ -192,6 +206,7 @@ int Processor::von_Neuman_step(bool debug) {
 					read_counter_from_pc(counter);
 					read_size_from_pc(size);
 					read_reg_from_pc(regnum1);
+					nb_mem_acc += size;
 					for (int i = 0; i < size; i++) {
 							ur = ur + (m->read_bit(counter) << i);
 					}
@@ -202,6 +217,7 @@ int Processor::von_Neuman_step(bool debug) {
 					read_size_from_pc(size);
 					read_reg_from_pc(regnum1);
 					ur = 0;
+					nb_mem_acc += size;
 					fullr = 0; //last bit read
 					for (int i = 0; i < size; i++) {
 						fullr = m->read_bit(counter);
@@ -269,6 +285,7 @@ int Processor::von_Neuman_step(bool debug) {
 			read_counter_from_pc(counter);
 			read_size_from_pc(size);
 			read_reg_from_pc(regnum1);
+			nb_mem_acc += size;
 			fullr = 1;
 			for (int ii = 0; ii < size; ii++) {
 				m->write_bit(counter, (r[regnum1] & fullr)>>ii);
@@ -310,8 +327,9 @@ int Processor::von_Neuman_step(bool debug) {
 		case 0b1110000: // push
 			read_size_from_pc(size);
 			read_reg_from_pc(regnum1);
+					nb_mem_acc += size;
 			if (m->counter[SP] == 0) {
-				m->set_counter(SP, 0xFF << 6); // loin du screen, on est bien
+				m->set_counter(SP, 0x10000); // loin du screen, on est bien
 			}
 			m->set_counter(SP, m->counter[SP] - size);
 			fullr = 1;
@@ -468,9 +486,10 @@ int Processor::von_Neuman_step(bool debug) {
 
 	}
 
+
 	if (debug) {
-		cout << "pc=" << dec << instr_pc << "  r0=" << r[0] <<"  r1=" << r[1] <<"  r2=" << r[2] <<"  r3=" << r[3] <<"  r4=" << r[4] <<"  r5=" << r[5] <<"  r6=" << r[6] <<"  r7=" << r[7] << endl;
-		cout << "after instr: " << opcode  << " at pc=" << instr_pc << " A0 = " << m->counter[2] << " A1 = " << m->counter[3];  /*<< hex << setw(8) << setfill('0') << instr_pc
+		cout << "pc=" << dec << instr_pc << "  r0=" << int(r[0]) <<"  r1=" << r[1] <<"  r2=" << int(r[2]) <<"  r3=" << int(r[3]) <<"  r4=" << int(r[4]) <<"  r5=" << r[5] <<"  r6=" << r[6] <<"  r7=" << r[7] << endl;
+		cout << "after instr: " << opcode << " at pc=" << instr_pc << " A0 = " << m->counter[2] << " A1 = " << m->counter[3];  /*<< hex << setw(8) << setfill('0') << instr_pc
 				 << " (newpc=" << hex << setw(8) << setfill('0') << pc
 				 << " mpc=" << hex << setw(8) << setfill('0') << m->counter[0] 
 				 << " msp=" << hex << setw(8) << setfill('0') << m->counter[1] 
@@ -630,7 +649,7 @@ bool Processor::cond_true(int cond) { // Fonctionne ok
 		return !zflag && ((nflag && vflag) || (!nflag && !vflag));
 		break;
 	case 3 : // signed smaller than <
-		return (nflag && !vflag) || (!nflag && vflag);
+		return ((nflag && !vflag) || (!nflag && vflag) )&& !zflag;
 		break;
 	case 4 : // unsigned GT >
 		return (!cflag && !zflag);

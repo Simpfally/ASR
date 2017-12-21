@@ -117,281 +117,169 @@ fill:
 return
 
 ;;draw : trace une ligne de couleur r0 entre les points de coordonnée (r1,r2) et (r3,r4)
-;; dx > dy
-drawdx>dy:
-
-
-
-push 16 r1
-push 32 r5
-push 16 r2 ; dx
-push 16 r4 ; dy
-push 32 r6 ; e
-
-asr3 r5 r2 5
-shift 0 r2 7
-add2 r5 r2
-shift 1 r2 7
-add2 r5 r1
-shift 0 r5 4
-add2i r5 0x10000
-
-sub3 r6 r3 r1 ; e = x2 - x1
-sub2 r4 r2 ; dy = (y2 - y1 )* 2
-shift 0 r4 1
-asr3 r2 r6 1 ; dx = e * 2
-
-loop1:
-	setctr a0 r5
-	write a0 16 r0
-	add2i r5 16 ; x++
-	add2i r1 1
-
-	sub2 r6 r4 ; e -= dy
-	jumpif 16 sgt break11
-		add2i r5 2560 ; y++ si e <= 0
-		add2 r6 r2 ; e += dx
-
-	break11:
-	cmp r1 r3
-	jumpif 16 gt break1
-	jump 16 loop1
-
-break1:
-pop 32 r6
-pop 16 r4
-pop 16 r2
-pop 32 r5
-pop 16 r1
-
-return
-;;;;;;;;;
-
-drawdx<dy:
-
-
-
-push 16 r3
-push 16 r4
-push 16 r3
-push 16 r4
-pop 16 r3 ; swapped y2 and x2
-pop 16 r4 ;
-
-
-push 16 r1
-push 32 r5
-push 16 r2 ; dx
-push 16 r4 ; dy
-push 32 r6 ; e
-
-
-asr3 r5 r2 5
-shift 0 r2 7
-add2 r5 r2
-shift 1 r2 7
-add2 r5 r1
-shift 0 r5 4
-add2i r5 0x10000
-
-sub3 r6 r3 r1 ; e = x2 - x1
-sub2 r4 r2 ; dy = (y2 - y1 )* 2
-shift 0 r4 1
-asr3 r2 r6 1 ; dx = e * 2
-
-loop2:
-	setctr a0 r5
-	write a0 16 r0
-	add2i r5 2560 ; x++
-	add2i r1 1
-
-	sub2 r6 r4 ; e -= dy
-	jumpif 16 sgt break21
-		add2i r5 16 ; y++ si e <= 0
-		add2 r6 r2 ; e += dx
-
-	break21:
-	cmp r1 r3
-	jumpif 16 gt break2
-	jump 16 loop2
-
-break2:
-pop 32 r6
-pop 16 r4
-pop 16 r2
-pop 32 r5
-pop 16 r1
-pop 16 r4
-pop 16 r3
-
-return
-
-;;;;;;;;
-
-;;;;;;;;;
-
-drawdx>dy1:
-
-
-
-
-pop 16 r4
-pop 16 r3
-
-push 16 r1
-push 32 r5
-push 16 r2 ; dx
-push 16 r4 ; dy
-push 32 r6 ; e
-
-sub3 r4 r2 r4
-add2 r4 r2
-
-asr3 r5 r2 5
-shift 0 r2 7
-add2 r5 r2
-shift 1 r2 7
-add2 r5 r1
-shift 0 r5 4
-add2i r5 0x10000
-
-sub3 r6 r3 r1 ; e = x2 - x1
-sub2 r4 r2 ; dy = (y2 - y1 )* 2
-shift 0 r4 1
-asr3 r2 r6 1 ; dx = e * 2
-
-loop3:
-	setctr a0 r5
-	write a0 16 r0
-	add2i r5 16 ; x++
-	add2i r1 1
-
-	sub2 r6 r4 ; e -= dy
-	jumpif 16 sgt break31
-		sub2i r5 2560 ; y++ si e <= 0
-		add2 r6 r2 ; e += dx
-
-	break31:
-	cmp r1 r3
-	jumpif 16 gt break3
-	jump 16 loop3
-
-break3:
-pop 32 r6
-pop 16 r4
-pop 16 r2
-pop 32 r5
-pop 16 r1
-
-return
-
-;;;;;;;;;
-drawdx<dy1:
-
-
-
-pop 16 r4
-pop 16 r3
-
-push 16 r3
-push 16 r4
-
-push 16 r3
-push 16 r4
-pop 16 r3 ; swapped y2 and x2
-pop 16 r4 ;
-
-push 16 r1
-push 32 r5
-push 16 r2 ; dx
-push 16 r4 ; dy
-push 32 r6 ; e
-
-sub3 r4 r2 r4
-add2 r4 r2
-
-asr3 r5 r2 5
-shift 0 r2 7
-add2 r5 r2
-shift 1 r2 7
-add2 r5 r1
-shift 0 r5 4
-add2i r5 0x10000
-
-sub3 r6 r3 r1 ; e = x2 - x1
-sub2 r4 r2 ; dy = (y2 - y1 )* 2
-shift 0 r4 1
-asr3 r2 r6 1 ; dx = e * 2
-
-loop4:
-	setctr a0 r5
-	write a0 16 r0
-	sub2i r5 2560 ; x++
-	add2i r1 1
-
-	sub2 r6 r4 ; e -= dy
-	jumpif 16 sgt break41
-		add2i r5 16 ; y++ si e <= 0
-		add2 r6 r2 ; e += dx
-
-	break41:
-	cmp r1 r3
-	jumpif 16 gt break4
-	jump 16 loop4
-
-break4:
-pop 32 r6
-pop 16 r4
-pop 16 r2
-pop 32 r5
-pop 16 r1
-pop 16 r4
-pop 16 r3
-
-return
-
-;;;;;;;;;
-;;
-
-
 draw:
+push 16 r0 ; couleur
+push 16 r1 ; addr du pixel
+push 16 r2 ; dy
+push 16 r3 ; dx
+push 16 r4 ; err
+push 32 r5 ; pas selon x
+push 32 r6 ; 
+push 32 r7 ; 
 
-cmp r3 r1
-jumpif 16 gt x1<x2
-; x1 > x2 ;; suffit d'inverser x1 y1 <-> x2 y2
+let r6 r4
+setctr a1 r4 ; y1
+push 16 r3 ; x1
+push 16 r2 ; y0
 push 16 r1
-push 16 r2
+push 16 r3
+
+
+let r3 r1
+asr3 r1 r2 5 ; r1 = x0 + r2 * 32
+shift 0 r2 7
+add2 r1 r2 ;r1 = x0 + r2 * 160
+add2 r1 r3
+shift 1 r2 7 ; r2 retour à sa valeur (y0)
+shift 0 r1 4
+add2i r1 0x10000
+setctr a0 r1
+
+write a0 16 r0
+getctr a0 r1
+sub2i r1 16
+setctr a0 r1
+
+pop 16 r3
+pop 16 r1
+
+cmp r1 r3
+jumpif 16 lt x0<x1
+;then
+	sub3 r3 r1 r3 ; DX = x0 - x1
+	leti r5 0
+	jump 16 skipx0<x1
+;else
+	x0<x1:
+	leti r5 1
+	sub3 r3 r3 r1
+skipx0<x1:
+
+
+	cmp r2 r4
+	jumpif 16 lt y0<y1
+;then
+	sub3 r2 r4 r2 ; DY = y1 - y0
+	jump 16 skipy0<y1
+;else
+	y0<y1:
+	add2i r5 2
+	sub2 r2 r4
+	skipy0<y1:
+
+pop 16 r6 ;y0
+
+add3 r4 r2 r3
+
+loop:
+	shift 0 r4 1 ; R4 = ERR * 2
+
+
+	cmp r4 r2
+	jumpif 16 slt e2>=dy ; jump if e2 < dy
+	pop 16 r7 ; x1
+	cmp r7 r1 ; x1 == x0
+	push 16 r7
+	jumpif 16 eq break1
+	push 32 r0
+	push 32 r4 ;; ERR*2 E2
+	shift 1 r4 1 ; R4 = ERR
+	add2 r4 r2 ;R4 = ERR += DY
+
+
+let r0 r5 ; r0 = donnée des pas
+and3i r0 r0 1
+cmpi r0 1
+jumpif 16 neq pasneg
+add2i r1 1
+getctr a0 r7
+add2i r7 16
+setctr a0 r7
+
+jump 16 skippaspos
+pasneg:
+sub2i r1 1
+getctr a0 r7
+sub2i r7 16
+setctr a0 r7
+jump 16 skippaspos
+
+
+	e2>=dy: ; (rien fait)
+	push 32 r0
+	push 32 r4
+	shift 1 r4 1
+
+	skippaspos:
+	pop 32 r0 ; r0 = E2
+
+	cmp r3 r0
+	jumpif 16 slt dx<e2
+	; là  dx >= e2
+
+	getctr a1 r7 ; Y1
+	cmp r7 r6 ; Y1 == Y0?
+	jumpif 16 eq break2
+
+	add2 r4 r3 ; ERR += DX
+
+let r0 r5
+and3i r0 r0 2
+shift 1 r0 1
+cmpi r0 1
+jumpif 16 neq pasnegro
+add2i r6 1
+getctr a0 r7
+add2i r7 2560
+setctr a0 r7
+jump 16 skippasneg
+pasnegro:
+sub2i r6 1
+getctr a0 r7
+sub2i r7 2560
+setctr a0 r7
+jump 16 skippasneg
+	dx<e2:
+	;(rien fait)
+
+
+
+
+
+skippasneg:
+	pop 32 r0
+	write a0 16 r0
+	getctr a0 r7
+	sub2i r7 16
+	setctr a0 r7
+jump 16 loop
+break1:
+pop 16 r1
+jump 16 nff
+break2:
+pop 32 r0
+pop 16 r1
+
+nff:
+pop 32 r7
+pop 32 r6
+pop 32 r5
 pop 16 r4
 pop 16 r3
-jump 16 draw
-
-x1<x2:
-cmp r4 r2
-jumpif 16 gt y1<y2
-; y1 > y2
-push 16 r3
-push 16 r4
-sub2 r3 r1 ; dx
-sub2 r4 r2 ; dy
-cmp r3 r4
-
-jumpif 16 sgt drawdx>dy1
-; dx < dy
-jump 16 drawdx<dy1
-
-
-y1<y2:
-push 16 r3
-push 16 r4
-sub2 r3 r1 ; dx
-sub2 r4 r2 ; dy
-cmp r3 r4
-pop 16 r4
-pop 16 r3
-jumpif 16 gt drawdx>dy
-; dx < dy
-jump 16 drawdx<dy
-
+pop 16 r2
+pop 16 r1
+pop 16 r0
+return
 
 
 
@@ -399,17 +287,48 @@ jump 16 drawdx<dy
 ; 0x0F111 un rose qui va bien avec.. bref
 main:
 
-	leti r0 0xF000
+	leti r0 0xF1234
+	leti r1 100
+	leti r2 80
+	call plot
+	leti r0 0xFFFF
 	leti r1 60
 	leti r2 60
-	leti r3 80
-	leti r4 65
-	;call draw
-	leti r3 65
-	leti r4 80
-	;call draw
-	leti r3 65
-	leti r4 25
+	
+	add3i r3 r2 20
+	add3i r4 r2 40
 	call draw
+	add3i r3 r2 20
+	sub3i r4 r2 40
+	leti r0 0x0F111
+	call draw
+	sub3i r3 r2 20
+	add3i r4 r2 40
+	leti r0 0xF1234
+	call draw	
+	leti r0 0x000FF
+	sub3i r3 r2 20
+	sub3i r4 r2 40
+	call draw
+
+
+	add3i r3 r2 40
+	add3i r4 r2 20
+	call draw
+	add3i r3 r2 40
+	sub3i r4 r2 20
+	leti r0 0x0F111
+	call draw
+	sub3i r3 r2 40
+	add3i r4 r2 20
+	leti r0 0xF1234
+	call draw	
+	leti r0 0x000FF
+	sub3i r3 r2 40
+	sub3i r4 r2 20
+	call draw
+
+
+
 
 	jump -13

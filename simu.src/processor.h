@@ -5,6 +5,9 @@ class Processor {
 	Processor(Memory* m);
 	~Processor();
 	int von_Neuman_step(bool debug);
+	long stat_instruc[100];
+	long nb_ins;
+	long nb_mem_acc;
 
  private:
 	void read_bit_from_pc(int& var);
@@ -33,5 +36,4 @@ class Processor {
 	bool cflag;
 	bool nflag;
 	bool vflag;
-	int stat_instruc[100];
 };
