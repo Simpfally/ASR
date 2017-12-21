@@ -10,6 +10,8 @@ Processor::Processor(Memory* m): m(m) {
 	a2=0;
 	for (int i=0; i<7; i++)
 		r[i]=0;
+	for (int i=0; i<100; i++)
+		stat_instruc[i]=0;
 }
 
 Processor::~Processor()
@@ -26,9 +28,10 @@ int vflag_sub(uword a, uword b) {
 	return ((x^y) >= 0) && ((x ^ (x -y)) < 0);
 }
 
-void Processor::von_Neuman_step(bool debug) {
+int Processor::von_Neuman_step(bool debug) {
 	// numbers read from the binary code
 	int opcode=0;
+	int b = 1 && debug; // continue?
 	int regnum1=0;
 	int regnum2=0;
 	int regnum3=0;
@@ -56,6 +59,7 @@ void Processor::von_Neuman_step(bool debug) {
 	read_bit_from_pc(opcode);
 
 	switch(opcode) {
+		
 
 	case 0x0: // add2
 		read_reg_from_pc(regnum1);
@@ -139,7 +143,6 @@ void Processor::von_Neuman_step(bool debug) {
 	case 0x7: //leti// to test
 		read_reg_from_pc(regnum1);
 		read_const_signed_from_pc(offset);
-		printf("%d\n", offset);
 		uop2 = offset;
 		r[regnum1] = uop2;
 		manage_flags = false;
@@ -147,6 +150,7 @@ void Processor::von_Neuman_step(bool debug) {
 		
 	case 0xa: // jump
 		read_addr_from_pc(offset);
+		if (int(offset) == -13) b = 0;
 		pc += offset;
 		m -> set_counter(PC, (uword)pc);
 		manage_flags=false;		
@@ -453,6 +457,8 @@ void Processor::von_Neuman_step(bool debug) {
 			}
 		break;
 	}
+	// STATISTIQUES
+	stat_instruc[opcode]++;
 	
 	// flag management
 	if(manage_flags) {
@@ -464,19 +470,19 @@ void Processor::von_Neuman_step(bool debug) {
 
 	if (debug) {
 		cout << "pc=" << dec << instr_pc << "  r0=" << r[0] <<"  r1=" << r[1] <<"  r2=" << r[2] <<"  r3=" << r[3] <<"  r4=" << r[4] <<"  r5=" << r[5] <<"  r6=" << r[6] <<"  r7=" << r[7] << endl;
-		cout << "after instr: " << opcode 
-				 << " at pc=" << hex << setw(8) << setfill('0') << instr_pc
+		cout << "after instr: " << opcode  << " at pc=" << instr_pc << " A0 = " << m->counter[2] << " A1 = " << m->counter[3];  /*<< hex << setw(8) << setfill('0') << instr_pc
 				 << " (newpc=" << hex << setw(8) << setfill('0') << pc
 				 << " mpc=" << hex << setw(8) << setfill('0') << m->counter[0] 
 				 << " msp=" << hex << setw(8) << setfill('0') << m->counter[1] 
 				 << " ma0=" << hex << setw(8) << setfill('0') << m->counter[2] 
 				 << " ma1=" << hex << setw(8) << setfill('0') << m->counter[3] << ") ";
-			//				 << " newpc=" << hex << setw(9) << setfill('0') << pc;
-		cout << " zcvn = " << (zflag?1:0) << (cflag?1:0) << (vflag?1:0)  << (nflag?1:0);
-		for (int i=0; i<8; i++)
+			//				 << " newpc=" << hex << setw(9) << setfill('0') << pc; */
+		cout << " zcvn = " << (zflag?1:0) << (cflag?1:0) << (vflag?1:0)  << (nflag?1:0) << endl;
+		/*for (int i=0; i<8; i++)
 			cout << " r"<< dec << i << "=" << hex << setw(8) << setfill('0') << r[i];
-		cout << endl;
+		cout << endl;*/
 	}
+	return b;
 }
 
 

@@ -62,6 +62,7 @@ int main(int argc, char* argv[]) {
 		
 	m= new Memory();
 	p = new Processor(m);
+	bool b = 1+1==2;
 
 	m->fill_with_obj_file(filename);
 
@@ -216,8 +217,8 @@ int main(int argc, char* argv[]) {
 		screen=new std::thread(simulate_screen, m, &refresh);
 
 	// The von Neuman cycle
-	while(1+1==2) {
-		p->von_Neuman_step(debug);
+	while(b) {
+		b = p->von_Neuman_step(debug);
 		
 		if(step_by_step)
 			getchar();
