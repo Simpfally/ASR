@@ -54,7 +54,7 @@ clean_screen:
 plot:
 
 ; à décider si on fait cet écart de performance ou non :
-;push 32 r3 ;;pour pas perdre notre registre quand on exécute la fonction
+push 32 r3 ;;pour pas perdre notre registre quand on exécute la fonction
 
 	asr3 r3 r2 5 	; r3 <- r2 << 5 ; r3 = r2 * 32
 	shift 0 r2 7
@@ -68,7 +68,7 @@ plot:
 	setctr a0 r3
 	write a0 16 r0
 
-	;pop 32 r3
+	pop 32 r3
 
 return
 
@@ -80,6 +80,7 @@ fill:
 	push 32 r5
 	push 16 r2
 	push 16 r1
+	sub2i r4 1
 
 	fillloopy:
 		asr3 r5 r2 5
@@ -110,8 +111,8 @@ fill:
 
 	fillbreak2:
 
-	pop 16 r2
 	pop 16 r1
+	pop 16 r2
 	pop 32 r5
 
 return
@@ -341,5 +342,21 @@ return
 
 
 main:
+
+leti r0 61444
+leti r1 10
+leti r2 60
+leti r3 55
+leti r4 70
+call fill
+
+leti r0 12444
+leti r1 10
+leti r2 60
+call plot
+leti r1 55
+leti r2 70
+call plot
+
 
 	jump -13
