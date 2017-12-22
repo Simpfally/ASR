@@ -1,0 +1,22 @@
+Jeu de la vie, 200 étapes :
+
+Statistiques sur 475134923 instructions:
+0 add2          : 0.00%
+1 add2i         : 9.32%
+3 sub2i         : 3.35%
+5 cmpi          : 18.45%
+7 leti          : 0.86%
+8 shift         : 0.00%
+10 jump         : 3.42%
+11 jumpif       : 18.45%
+18 readze       : 14.27%
+52 write        : 0.02%
+53 call         : 8.37%
+54 setctr       : 9.22%
+112 push        : 5.90%
+113 return      : 8.37%
+126 pop         : 0.00%
+
+
+Il y a clairement de l'optimisation à faire du côté des jumpif, cmpi et readze
+
