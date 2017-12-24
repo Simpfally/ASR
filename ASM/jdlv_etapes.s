@@ -80,6 +80,7 @@ fill:
 	push 32 r5
 	push 16 r2
 	push 16 r1
+	sub2i r4 1
 
 	fillloopy:
 		asr3 r5 r2 5
@@ -110,8 +111,8 @@ fill:
 
 	fillbreak2:
 
-	pop 16 r2
 	pop 16 r1
+	pop 16 r2
 	pop 32 r5
 
 return

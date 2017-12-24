@@ -338,9 +338,340 @@ pop 16 r2
 pop 16 r1
 pop 16 r0
 return
-;;;;
+
+orgamacro:
+setctr a0 r2
+readze a0 16 r3
+cmpi r3 65535
+jumpif 16 neq orgamacroend
+backo:
+add2i r4 1
+cmpi r4 4
+jumpif 16 eq shoulddo
+
+jump 16 endosni
+orgamacroend:
+cmpi r3 0xFFFE ;COLOR DELETE
+jumpif 16 eq backo
+
+endosni:
+return
+
+;; do w/e to pixel in r0 r1, address is in r2
+orga:
+;;count neighbors
+push 32 r7
+push 32 r2
+leti r4 0
+
+sub2i r2 2560
+call orgamacro
+add2i r2 16
+call orgamacro
+sub2i r2 32
+call orgamacro
+add2i r2 16
+
+add2i r2 2560
+add2i r2 16
+call orgamacro
+sub2i r2 32
+call orgamacro
+add2i r2 16
+
+add2i r2 2560
+call orgamacro
+add2i r2 16
+call orgamacro
+sub2i r2 32
+call orgamacro
+
+shoulddo:
+
+
+pop 32 r2
+setctr a0 r2
+push 32 r2
+readze a0 16 r3
+cmpi r3 65535
+jumpif 16 neq isthree ;finished if its dead
+
+cmpi r4 3
+jumpif 16 eq end
+
+cmpi r4 2
+jumpif 16 eq end ;let it
+;not 2 not 3 = dead
+jump 16 delete
+
+isthree:
+cmpi r4 3
+jumpif 16 eq create
+jump 16 end
+
+create:
+pop 32 r2
+push 32 r2
+push 32 r4
+leti r4 1 ; green
+setctr a0 r2
+write a0 16 r4
+pop 32 r4
+jump 16 end
+
+delete:
+pop 32 r2
+push 32 r4
+leti r4 0xFFFE ; COLOR DELETE
+setctr a0 r2
+write a0 16 r4
+pop 32 r4
+pop 32 r7
+return
+
+end:
+
+pop 32 r2
+pop 32 r7
+
+return
+
+
+;PRESTEP
+life:
+push 32 r7
+leti r1 1
+leti r0 1
+
+; set cursor at r0 r1
+asr3 r2 r1 5
+shift 0 r1 7
+add2 r2 r1
+shift 1 r1 7
+add2 r2 r0
+shift 0 r2 4
+add2i r2 0x10000
+setctr a0 r2
+
+
+loopy:
+push 16 r0
+push 32 r2
+loopx:
+push 32 r2
+call orga
+pop 32 r2
+add2i r0 1
+add2i r2 16
+cmpi r0 159
+jumpif 16 eq breakx
+jump 16 loopx
+breakx:
+pop 32 r2
+add2i r1 1
+add2i r2 2560
+cmpi r1 127
+jumpif 16 eq breaky
+pop 16 r0
+jump 16 loopy
+
+
+breaky:
+pop 16 r0
+
+
+pop 32 r7
+return
+
+
+;;
+gala:
+push 32 r7
+push 32 r4
+setctr a0 r2
+readze a0 16 r4
+setctr a0 r2
+cmpi r4 0xFFFE ;COLOR DELETE
+jumpif 16 eq galadelete
+cmpi r4 1 ; COLOR CREATE
+jumpif 16 eq galacreate
+jump 16 galaend
+galadelete:
+leti r4 0
+write a0 16 r4
+jump 16 galaend
+galacreate:
+leti r4 65535
+write a0 16 r4
+
+galaend:
+pop 32 r4 
+pop 32 r7
+return
+
+;; do modifications
+life2:
+
+push 32 r7
+leti r1 1
+leti r0 1
+
+; set cursor at r0 r1
+asr3 r2 r1 5
+shift 0 r1 7
+add2 r2 r1
+shift 1 r1 7
+add2 r2 r0
+shift 0 r2 4
+add2i r2 0x10000
+setctr a0 r2
+
+
+galaloopy:
+push 16 r0
+push 32 r2
+galaloopx:
+push 32 r2
+call gala
+pop 32 r2
+add2i r0 1
+add2i r2 16
+cmpi r0 159
+jumpif 16 eq galabreakx
+jump 16 galaloopx
+galabreakx:
+pop 32 r2
+add2i r1 1
+add2i r2 2560
+cmpi r1 127
+jumpif 16 eq galabreaky
+pop 16 r0
+jump 16 galaloopy
+
+
+galabreaky:
+pop 16 r0
+
+
+pop 32 r7
+return
 
 
 main:
 
-	jump -13
+leti r0 0xFFFFFF
+leti r1 12
+leti r2 12
+call plot
+sub2i r2 1
+call plot
+add2i r1 1
+call plot
+add2i r2 1
+call plot
+
+
+
+leti r1 20
+leti r2 20
+call plot
+leti r1 19
+leti r2 19
+call plot
+leti r1 21
+leti r2 19
+call plot
+
+leti r1 30
+leti r2 20
+call plot
+leti r1 30
+leti r2 21
+call plot
+leti r1 29
+leti r2 22
+call plot
+leti r1 28
+leti r2 21
+call plot
+
+leti r1 55
+leti r2 55
+call plot
+leti r1 55
+leti r2 56
+call plot
+leti r1 55
+leti r2 57
+call plot
+leti r1 56
+leti r2 55
+call plot
+leti r1 54
+leti r2 56
+call plot
+
+
+leti r1 50
+leti r2 110
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 2
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 4
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 7
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 2
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+add2i r1 1
+call plot
+
+loopdsq:
+call life
+call life2
+jump 16 loopdsq
+jump -13
